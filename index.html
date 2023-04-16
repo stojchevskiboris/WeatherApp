@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     <title>Weather</title>
     <link rel="icon" type="image/x-icon" href="/icons/favicon.ico">
     <link rel="stylesheet" href="jquery/jquery-ui.css">
@@ -44,6 +43,13 @@
 </body>
 
 <script>
+    let headers = new Headers();
+
+
+    headers.append('Content-Type', 'application/json');
+    headers.append('Accept', 'application/json');
+    headers.append('Access-Control-Allow-Origin','*');
+    // headers.append('Origin','http://localhost:3000');
 
 
 
@@ -54,10 +60,11 @@
 
             // http://api.weatherapi.com/v1/forecast.json?key=19a1d968ac214ba2b3d195557233001&q=Resen Mkd&days=10&aqi=yes&alerts=no
 
-            let url = 'http://api.weatherapi.com/v1/forecast.json?key=19a1d968ac214ba2b3d195557233001&q=' + city + '&days=9&aqi=yes&alerts=no'
+            let url = 'https://api.weatherapi.com/v1/forecast.json?key=19a1d968ac214ba2b3d195557233001&q=' + city + '&days=9&aqi=yes&alerts=no'
 
             let request = new Request(url, {
-                method: 'GET'
+                method: 'GET',
+                headers: headers
             });
             let result = await fetch(request);
             let response = await result.json();
@@ -90,10 +97,11 @@
         let q = $("#cityInput").val()
         if (q=="") return;
 
-        let url = 'http://api.weatherapi.com/v1/search.json?key=19a1d968ac214ba2b3d195557233001&q=' + q
+        let url = 'https://api.weatherapi.com/v1/search.json?key=19a1d968ac214ba2b3d195557233001&q=' + q
 
         let request = new Request(url, {
-            method: 'GET'
+            method: 'GET',
+            headers: headers
         });
         let result = await fetch(request);
         let response = await result.json();
