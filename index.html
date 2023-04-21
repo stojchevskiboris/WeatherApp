@@ -94,7 +94,8 @@
 
          const news2 = async () => {
              let response;
-             let URL = 'https://newsapi.org/v2/everything?q=weather&apiKey=5ee2afb6beec4ce68e6b283811c9ed17'
+             // let URL = 'https://newsapi.org/v2/everything?q=weather&apiKey=5ee2afb6beec4ce68e6b283811c9ed17'
+             let URL = 'https://api.worldnewsapi.com/search-news?api-key=9c6af65eb2604cf3adb6d23c77fdbe4e&text=weather'
              await fetch(URL)
                  .then(async (r) => {
                      response = await r.json();
