@@ -35,9 +35,7 @@
 
 
 <div class="row">
-Actual Weather Forecast
     <div class="col" id="p"></div>
-
 </div>
 
 <div class="row" id="news">
@@ -56,7 +54,7 @@ Actual Weather Forecast
     headers.append('Content-Type', 'application/json');
     headers.append('Accept', 'application/json');
     headers.append('Access-Control-Allow-Origin', '*');
-    // headers.append('Origin','http://localhost:3000');
+
     $(document).ready(function () {
 
         $("#add").click(async function () {
@@ -82,20 +80,30 @@ Actual Weather Forecast
             }
         });
 
-        async function news() {
-            let newsURL = 'https://newsapi.org/v2/everything?q=weather&apiKey=5ee2afb6beec4ce68e6b283811c9ed17'
-            let request = new Request(newsURL, {
-                method: 'GET'
-            });
-            let result = await fetch(request);
-            let response = await result.json();
-            console.log(response)
-            document.getElementById("r").innerText = JSON.stringify(response)
+         async function news() {
+             let newsURL = 'https://newsapi.org/v2/everything?q=weather&apiKey=5ee2afb6beec4ce68e6b283811c9ed17'
+             let request = new Request(newsURL, {
+                 method: 'GET'
+             });
+             let result = await fetch(request);
+             let response = await result.json();
+             console.log(response)
+             document.getElementById("r").innerText = JSON.stringify(response)
 
-        }
+         }
+
+         const news2 = async () => {
+             let response;
+             let URL = 'https://newsapi.org/v2/everything?q=weather&apiKey=5ee2afb6beec4ce68e6b283811c9ed17'
+             await fetch(URL)
+                 .then(async (r) => {
+                     response = await r.json();
+                 })
+             document.getElementById("r").innerText = JSON.stringify(response)
+         }
 
 
-        news();
+        news2();
     })
 
     function removeDuplicates(arr) {
@@ -155,6 +163,12 @@ Actual Weather Forecast
 
     #headerText {
         font-size: 50px;
+    }
+    #p{
+        background: #0dcaf0;
+    }
+    #r{
+        background: #60f00d;
     }
 </style>
 
