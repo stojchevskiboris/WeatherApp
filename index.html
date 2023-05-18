@@ -32,14 +32,20 @@
            id="cityInput">
     <button class="btn btn-xl btn-outline-primary" id="add">Search</button>
 </div>
+<br>
 
 
 <div class="row">
     <div class="col" id="p"></div>
 </div>
 
+<br>
+
 <div class="row" id="news">
-    <div class="col" id="r"></div>
+    <div class="col" id="n">
+        <img src="icons/loading.gif" height="50" width="50"/>
+        Loading news
+    </div>
 </div>
 
 <br> <br> <br> <br> <br> <br> <br>
@@ -69,7 +75,18 @@
             let result = await fetch(request);
             let response = await result.json();
             // console.log(response)
-            document.getElementById("p").innerText = JSON.stringify(response)
+            // document.getElementById("p").innerText = JSON.stringify(response)
+
+            let forecast = response;
+            let text = "<div class='bg-primary'>"
+
+            text += "<div class='card bg-body-secondary'>" + forecast.location.name + "</div>"
+            text += "<div class='card bg-body-secondary'>" + forecast.location.region + "</div>"
+            text += "<div class='card bg-body-secondary'>" + forecast.location.country + "</div>"
+
+            text+="</div>"
+
+            document.getElementById("p").innerHTML = text
         })
 
         let input = document.getElementById("cityInput");
@@ -80,17 +97,6 @@
             }
         });
 
-         async function news() {
-             let newsURL = 'https://newsapi.org/v2/everything?q=weather&apiKey=5ee2afb6beec4ce68e6b283811c9ed17'
-             let request = new Request(newsURL, {
-                 method: 'GET'
-             });
-             let result = await fetch(request);
-             let response = await result.json();
-             console.log(response)
-             document.getElementById("r").innerText = JSON.stringify(response)
-
-         }
 
          const news2 = async () => {
              let response;
@@ -100,7 +106,18 @@
                  .then(async (r) => {
                      response = await r.json();
                  })
-             document.getElementById("r").innerText = JSON.stringify(response)
+             // document.getElementById("n").innerText = JSON.stringify(response.news[0].title)
+             // document.getElementById("n").append("\n"+response.news[3].title)
+             let newsArr = response.news;
+             let text = "<div class='bg-primary'>"
+             for (let x in newsArr){
+                 text += "<div class='card bg-body-secondary'><a href='" + newsArr[x].url + "'> " + newsArr[x].title + "</a>"
+                     + "<img src='" + newsArr[x].image + "' height='168' width='300'/>"
+                     + "</div>"
+             }
+             text+="</div>"
+
+             document.getElementById("n").innerHTML = text
          }
 
 
@@ -168,9 +185,7 @@
     #p{
         background: #0dcaf0;
     }
-    #r{
-        background: #60f00d;
-    }
+
 </style>
 
 </html>
