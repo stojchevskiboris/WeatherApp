@@ -13,225 +13,178 @@
             integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
             crossorigin="anonymous"></script>
 
+    <link rel="stylesheet" href="index.css">
+    <script src="index.js"></script>
+
 
 </head>
 <body class="container-sm">
 
 <header id="header1" class="navbar navbar-dark  mb-3">
-
     <img src="icons/weather.png" height="100" width="100"/>
     <p id="headerText" class="nav nav-item">Weather App</p>
     <img src="icons/weather.png" height="100" width="100"/>
     <!--    <a href="https://github.com/stojchevskiboris/WeatherApp" target=”_blank”> <img  height="40" width="40" id="hovergithub" title="View project source code on Github" src="icons/github.png"></a>-->
 </header>
-
 <br>
 
 <div>
-    <input onkeyup="inAuto()" class="btn-xl  border-primary btn-group" placeholder="Search City, Country" type="text"
+    <input onkeyup="inAuto()" class="btn-xl border-primary btn-group" placeholder="City, Country" type="text"
            id="cityInput">
-    <button class="btn btn-xl btn-outline-primary" id="add">Search</button>
+    <button class="btn btn-xl btn-primary " id="add">Search</button>
 </div>
-<br>
+<br><br><br><br>
 
-<br><br><br>
+<div id="main" class="justify-content-center">
 
+    <div id="selectedCity" style="display: none">
 
-<div class="row">
-    <div class="col" id="p"></div>
-</div>
+        <div id="card1" class="card">
+            <div class="card-header">
+                <h5 class="c1" id="t1">City, Country</h5>
+                <span class="c2 ">Last updated: <span id="t2"></span></span>
+            </div>
+            <div id="cb1" class="card-body cb-shadow">
+                <h5 class="card-title c3 color2" id="t3">Temperature</h5>
+                <img id="c4img" src="" width="80px" height="80px">
+                <p class="card-text color2" id="t4">Weather</p>
+            </div>
+        </div>
 
-<br>
+        <br>
 
-<div id="n">
+        <div class="card">
+            <div class="card-body">
+                <h6 class="card-title">Weather today in <span id="t5"></span></h6>
+                <div class="fellsLike">
+                    <span class="c4" id="t6">Temperature</span><br>
+                    <p>Feels Like</p><br>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <div class="item border-bottom pb-2 mb-2 me-2">
+                            <img src="icons/weather/high_low.png" height="30" width="30"/>
+                            <span style="font-weight: bold">High / Low</span>
+                            <span class="float-end" id="t7"></span>
+                        </div>
+
+                        <div class="item border-bottom pb-2 mb-2 me-2">
+                            <img src="icons/weather/humidity.png" height="30" width="30"/>
+                            <span style="font-weight: bold">Humidity</span>
+                            <span class="float-end" id="t8"></span>
+                        </div>
+
+                        <div class="item border-bottom pb-2 mb-2 me-2">
+                            <img src="icons/weather/pressure.png" height="30" width="30"/>
+                            <span style="font-weight: bold">Pressure</span>
+                            <span class="float-end" id="t9"></span>
+                        </div>
+
+                        <div class="item pb-2 mb-2 me-2">
+                            <img src="icons/weather/visibility.png" height="30" width="30"/>
+                            <span style="font-weight: bold">Visibility</span>
+                            <span class="float-end" id="t10"></span>
+                        </div>
+
+                    </div>
+                    <div class="col">
+                        <div class="item border-bottom pb-2 mb-2 ms-2">
+                            <img src="icons/weather/wind.png" height="30" width="30"/>
+                            <span style="font-weight: bold">Wind</span>
+                            <span class="float-end" id="t11"></span>
+                        </div>
+
+                        <div class="item border-bottom pb-2 mb-2 ms-2">
+                            <img src="icons/weather/uv_index.png" height="30" width="30"/>
+                            <span style="font-weight: bold">UV Index</span>
+                            <span class="float-end" id="t12"></span>
+                        </div>
+
+                        <div class="item border-bottom pb-2 mb-2 ms-2">
+                            <img src="icons/weather/cloud.PNG" height="30" width="30"/>
+                            <span style="font-weight: bold">Clouds</span>
+                            <span class="float-end" id="t13"></span>
+                        </div>
+
+                        <div class="item pb-2 mb-2 ms-2">
+                            <img src="icons/weather/precipation.png" height="30" width="30"/>
+                            <span style="font-weight: bold">Precipitation</span>
+                            <span class="float-end" id="t14"></span>
+                        </div>
+                    </div>
+
+                </div>
+                <br>
+
+                <button id="airButton" class="btn btn-outline-primary mb-2">Air Quality</button>
+
+                <div class="row" id="airQ" style="display:none">
+                    <div class="col">
+                        <div class="item border-bottom pb-2 mb-2 me-2">
+                            <span style="font-weight: bold">Carbon Monoxide</span>
+                            <span class="float-end" id="t15"></span>
+                        </div>
+
+                        <div class="item border-bottom pb-2 mb-2 me-2">
+                            <span style="font-weight: bold">Nitrogen dioxide</span>
+                            <span class="float-end" id="t16"></span>
+                        </div>
+
+                        <div class="item border-bottom pb-2 mb-2 me-2">
+                            <span style="font-weight: bold">Ozone</span>
+                            <span class="float-end" id="t17"></span>
+                        </div>
+
+                        <div class="item pb-2 mb-2 me-2">
+                            <span style="font-weight: bold">Sulphur dioxide</span>
+                            <span class="float-end" id="t18"></span>
+                        </div>
+
+                    </div>
+                    <div class="col">
+                        <div class="item border-bottom pb-2 mb-2 ms-2">
+                            <span style="font-weight: bold">PM2.5</span>
+                            <span class="float-end" id="t19"></span>
+                        </div>
+
+                        <div class="item border-bottom pb-2 mb-2 ms-2">
+                            <span style="font-weight: bold">PM10</span>
+                            <span class="float-end" id="t20"></span>
+                        </div>
+
+                        <div class="item border-bottom pb-2 mb-2 ms-2">
+                            <span style="font-weight: bold">US - EPA standard</span>
+                            <span class="float-end" id="t21"></span>
+                        </div>
+
+                        <div class="item pb-2 mb-2 ms-2">
+                            <span style="font-weight: bold">UK Defra Index</span>
+                            <span class="float-end" id="t22"></span>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+    <!--<h6>Forecast coming soon</h6>-->
+
+    <br><br>
+
+    <h3>World news</h3>
+    <br>
+    <div id="newsDiv">
         <img src="icons/loading.gif" height="50" width="50"/>
         Loading news
-</div>
+    </div>
 
+</div>
 <br> <br> <br> <br> <br> <br> <br>
 <footer id="footer1">
     <p>&copy;<a class="link-secondary" href="https://github.com/stojchevskiboris">Boris Stojchevski</a></p>
 </footer>
 
 </body>
-
-<script>
-
-
-    let headers = new Headers();
-    headers.append('Content-Type', 'application/json');
-    headers.append('Accept', 'application/json');
-    headers.append('Access-Control-Allow-Origin', '*');
-
-    $(document).ready(function () {
-
-        $("#add").click(async function () {
-            let city = $("#cityInput").val()
-            // console.log(city)
-            // http://api.weatherapi.com/v1/forecast.json?key=19a1d968ac214ba2b3d195557233001&q=Resen Mkd&days=10&aqi=yes&alerts=no
-            let url = 'https://api.weatherapi.com/v1/forecast.json?key=19a1d968ac214ba2b3d195557233001&q=' + city + '&days=9&aqi=yes&alerts=no'
-            let request = new Request(url, {
-                method: 'GET',
-                headers: headers
-            });
-            let result = await fetch(request);
-            let response = await result.json();
-            // console.log(response)
-            // document.getElementById("p").innerText = JSON.stringify(response)
-
-            let forecast = response;
-            let text = "<div class='bg-primary'>"
-
-            text += "<div class='card bg-body-secondary'>" + forecast.location.name + "</div>"
-            text += "<div class='card bg-body-secondary'>" + forecast.location.region + "</div>"
-            text += "<div class='card bg-body-secondary'>" + forecast.location.country + "</div>"
-
-            text+="</div>"
-
-            document.getElementById("p").innerHTML = text
-        })
-
-        let input = document.getElementById("cityInput");
-        input.addEventListener("keypress", function (event) {
-            if (event.key === "Enter") {
-                event.preventDefault();
-                document.getElementById("add").click();
-            }
-        });
-
-
-         const news2 = async () => {
-             let response;
-             // let URL = 'https://newsapi.org/v2/everything?q=weather&apiKey=5ee2afb6beec4ce68e6b283811c9ed17'
-             let yesterday = new Date(Date.now() - 90000000).toLocaleString('sv').slice(0,10)
-             console.log(yesterday)
-             const api1 = '9c6af65eb2604cf3adb6d23c77fdbe4e';
-             const api2 = 'e76922ff429b47e08f0fec14509aed2f';
-             const api3 = '6d9a728b40ea4600a9374e384982abca';
-             var api = "";
-             var num = Math.random()
-             if(num<0.33)
-                 api = api1;
-             else if(num<0.66)
-                 api = api2;
-             else
-                 api = api3;
-
-             let URL = 'https://api.worldnewsapi.com/search-news?api-key=' + api + '&text=weather&earliest-publish-date=%27'+yesterday+'%27'
-             await fetch(URL)
-                 .then(async (r) => {
-                     response = await r.json();
-                 })
-             // document.getElementById("n").innerText = JSON.stringify(response.news[0].title)
-             // document.getElementById("n").append("\n"+response.news[3].title)
-
-             /**
-
-              text += "<div class='card bg-body-secondary'><a href='" + newsArr[x].url + "'> " + newsArr[x].title + "</a>"
-              + "<img src='" + newsArr[x].image + "' height='168' width='300'/>"
-              + "</div><br>"
-
-              <div class="card">
-                <img class="card-img-top" src="https://www.the-gazette.co.uk/resources/images/13559632/" alt="Card image cap">
-                <div class="card-body">
-                    <h5 class="card-title">White Cart footbridge: Life-saving equipment to be installed</h5>
-                    <p class="card-text">The equipment follows the recent implementation of seven new GPS signs placed at potentially dangerous areas along the River Gryffe and forms part of a drive to improve the safety of all waterways in Renfrewshire.</p>
-                    <p class="card-text"><small class="text-muted">1 day ago</small></p>
-                </div>
-              </div>
-
-              * */
-
-             let newsArr = response.news;
-             let text = ""
-             for (let x in newsArr){
-                 var description = newsArr[x].text.slice(0,400) + '...' + "<a href = " +  newsArr[x].url + ">Continue reading</a>"
-                 var newsDate = newsArr[x].publish_date.slice(0,10)
-                 text +=
-                 "<div class='card'>" +
-                     "<a href='"+newsArr[x].url + "'> <img class='card-img-top card-img-custom' src='" + newsArr[x].image + "' alt='Card image'></a>" +
-                     "<div class='card-body'>" +
-                        "<a href='" + newsArr[x].url + "'><h5 class='card-title'>" + newsArr[x].title + "</h5></a>" +
-                        "<p class='card-text'>" + description + "</p>" +
-                        "<p class='card-text'><small class='text-muted'>" + '1 day ago, ' + newsDate + "</small></p>" +
-                     "</div></div><br>"
-
-             }
-
-
-
-             document.getElementById("n").innerHTML = text
-         }
-
-
-        news2();
-    })
-
-    function removeDuplicates(arr) {
-        return arr.filter((a, b) => arr.indexOf(a) === b);
-    }
-
-    async function inAuto() {
-        let cities = [];
-        let q = $("#cityInput").val()
-        if (q == "") return;
-        let url = 'https://api.weatherapi.com/v1/search.json?key=19a1d968ac214ba2b3d195557233001&q=' + q
-        let request = new Request(url, {
-            method: 'GET',
-            headers: headers
-        });
-        let result = await fetch(request);
-        let response = await result.json();
-        let j = response.length;
-        for (i = 0; i < j; i++) {
-            // console.log(response)
-            cities.push(response[i].name + ", " + response[i].country)
-        }
-        cities = removeDuplicates(cities);
-        $("#cityInput").autocomplete({
-            source: cities
-        })
-
-    }
-</script>
-
-<style>
-    body {
-        margin: 2px;
-    }
-
-    .btn-xl {
-        padding: 18px 28px;
-        font-size: 26px;
-        line-height: normal;
-        -webkit-border-radius: 8px;
-        -moz-border-radius: 8px;
-        border-radius: 8px;
-    }
-
-    .row {
-        --bs-gutter-x: 0;
-        --bs-gutter-y: 0;
-    }
-
-    #header1 {
-        border-bottom: 1px solid #80b3ff;
-    }
-
-    #footer1 {
-        border-top: 1px solid #80b3ff;
-    }
-
-    #headerText {
-        font-size: 50px;
-    }
-    #p{
-        background: #0dcaf0;
-    }
-    .card{
-        max-width: 700px;
-    }
-
-</style>
-
 </html>

@@ -1,0 +1,90 @@
+body {
+    margin: 2px;
+}
+
+#main{
+    margin: auto;
+}
+
+.btn-xl {
+    padding: 18px 28px;
+    font-size: 26px;
+    line-height: normal;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    border-radius: 8px;
+}
+
+.row {
+    --bs-gutter-x: 0;
+    --bs-gutter-y: 0;
+}
+
+#header1, #selectedCity {
+    border-bottom: 2px solid #80b3ff;
+}
+
+#footer1 {
+    border-top: 2px solid #80b3ff;
+}
+
+#headerText {
+    font-size: 50px;
+}
+#p{
+    background: #0dcaf0;
+}
+.card{
+    max-width: 700px;
+}
+
+#selectedCity {
+    max-width: 700px;
+    padding-bottom: 30px;
+}
+
+#cb1 {
+    border-bottom-left-radius: 0.375rem !important;
+    border-bottom-right-radius: 0.375rem !important;
+}
+
+.c1 {
+    display: inline-block;
+}
+
+.c2 {
+    float: right;
+}
+
+.c3 {
+    font-size: 55px;
+}
+
+#t3 {
+    display: inline-block;
+}
+
+.day {
+    background-image: url("icons/day.png");
+}
+
+.night {
+    background-image: url("icons/night.png");;
+}
+
+.cb-shadow {
+    color: white;
+    text-shadow: 1px 1px #000000;
+}
+
+.c4 {
+    font-size: 40px;
+}
+
+#c4img {
+    float: right;
+}
+
+.fellsLike {
+    text-align: center;
+}

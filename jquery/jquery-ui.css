@@ -888,7 +888,7 @@ body .ui-tooltip {
 .ui-widget-header .ui-state-focus {
 	border: 1px solid #003aff;
 	border-radius: 5px;
-	background: #b1edff;
+	background: #f3f3ff;
 	font-weight: bold;
 	color: #0d6efc;
 }
