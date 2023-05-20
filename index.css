@@ -2,6 +2,11 @@ body {
     margin: 20px;
     max-width: 900px;
 }
+@media (max-width: 1000px) {
+    body{
+        zoom: 130%;
+    }
+}
 
 #main{
     margin: auto;
@@ -142,4 +147,8 @@ body {
     width: 696px;
     max-width: fit-content;
     color: white;
+}
+
+input[type=search]::-webkit-search-cancel-button {
+    -webkit-appearance: searchfield-cancel-button;
 }

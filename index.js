@@ -6,7 +6,7 @@ headers.append('Access-Control-Allow-Origin', '*');
 $(document).ready(function () {
 
 
-    $("#add").click(async function myfunc (str) {
+    $("#add").click(async function myfunc(str) {
         let city = $("#cityInput").val()
         // https://api.weatherapi.com/v1/forecast.json?key=19a1d968ac214ba2b3d195557233001&q=%27resen%20mkd%27&days=9&aqi=yes&alerts=no
         let url = 'https://api.weatherapi.com/v1/forecast.json?key=19a1d968ac214ba2b3d195557233001&q=' + city + '&days=9&aqi=yes&alerts=no'
@@ -20,16 +20,14 @@ $(document).ready(function () {
 
         let forecast = response;
 
-        setTimeout(()=>{
+        setTimeout(() => {
             weatherSelect(response)
         }, 200)
 
 
-
-
     })
 
-    function weatherSelect(json){
+    function weatherSelect(json) {
         document.getElementById("selectedCity").style.display = "block"
         // First Card
         document.getElementById("t1").innerText = json.location.name + ", " + json.location.country
@@ -60,7 +58,7 @@ $(document).ready(function () {
         document.getElementById("t21").innerText = json.current.air_quality["us-epa-index"]
         document.getElementById("t22").innerText = json.current.air_quality["gb-defra-index"]
 
-        document.getElementById("airButton").onclick = function (){
+        document.getElementById("airButton").onclick = function () {
             var display = document.getElementById("airQ").style.display
             if (display == 'flex')
                 document.getElementById("airQ").style.display = "none"
@@ -73,8 +71,7 @@ $(document).ready(function () {
         if (is_day == 0) {
             el.classList.remove("day")
             el.classList.add("night")
-        }
-        else {
+        } else {
             el.classList.remove("night")
             el.classList.add("day")
         }
@@ -91,23 +88,23 @@ $(document).ready(function () {
 
     const news2 = async () => {
         let response;
-        let yesterday = new Date(Date.now() - 90000000).toLocaleString('sv').slice(0,10)
+        let yesterday = new Date(Date.now() - 90000000).toLocaleString('sv').slice(0, 10)
         const api1 = '9c6af65eb2604cf3adb6d23c77fdbe4e';
         const api2 = 'e76922ff429b47e08f0fec14509aed2f';
         const api3 = '6d9a728b40ea4600a9374e384982abca';
         const api4 = 'a8bf0d174095465c8faeec59f0b4b28b';
         var api = "";
         var num = Math.random()
-        if(num<0.25)
+        if (num < 0.25)
             api = api1;
-        else if(num<0.50)
+        else if (num < 0.50)
             api = api2;
-        else if (num<0.75)
+        else if (num < 0.75)
             api = api3;
         else
             api = api4
 
-        let URL = 'https://api.worldnewsapi.com/search-news?api-key=' + api + '&text=weather&earliest-publish-date=%27'+yesterday+'%27'
+        let URL = 'https://api.worldnewsapi.com/search-news?api-key=' + api + '&text=weather&earliest-publish-date=%27' + yesterday + '%27'
         await fetch(URL)
             .then(async (r) => {
                 response = await r.json();
@@ -115,16 +112,16 @@ $(document).ready(function () {
 
         let newsArr = response.news;
         let text = ""
-        for (let x in newsArr){
-            var description = newsArr[x].text.slice(0,400) + '... ' + "<a href = " +  newsArr[x].url + " target=”_blank”>Continue reading</a>"
-            var newsDate = newsArr[x].publish_date.slice(0,10)
+        for (let x in newsArr) {
+            var description = newsArr[x].text.slice(0, 400) + '... ' + "<a href = " + newsArr[x].url + " target=”_blank”>Continue reading</a>"
+            var newsDate = newsArr[x].publish_date.slice(0, 10)
             text +=
                 "<div class='card'>" +
-                "<a href='"+newsArr[x].url + "' target=”_blank”> <img class='card-img-top card-img-custom' src='" + newsArr[x].image + "' alt='Image not available'></a>" +
+                "<a href='" + newsArr[x].url + "' target=”_blank”> <img class='card-img-top card-img-custom' src='" + newsArr[x].image + "' alt='Image not available'></a>" +
                 "<div class='card-body'>" +
                 "<a href='" + newsArr[x].url + "' target=”_blank”><h5 class='card-title'>" + newsArr[x].title + "</h5></a>" +
                 "<p class='card-text'>" + description + "</p>" +
-                "<p class='card-text'><small class='text-muted'>" + '1 day ago, ' + newsDate.slice(8,10) + "." + newsDate.slice(5,7) + "." + newsDate.slice(0,4) + "</small></p>" +
+                "<p class='card-text'><small class='text-muted'>" + '1 day ago, ' + newsDate.slice(8, 10) + "." + newsDate.slice(5, 7) + "." + newsDate.slice(0, 4) + "</small></p>" +
                 "</div></div><br>"
         }
         document.getElementById("newsDiv").innerHTML = text
@@ -153,14 +150,23 @@ async function inAuto() {
         cities.push(response[i].name + ", " + response[i].country)
     }
     cities = removeDuplicates(cities);
+
+    for (var x in cities){
+        if(cities[x]=="Resen, Macedonia") {
+            var tmp = cities[0]
+            cities[0] = 'Resen, Macedonia'
+            cities[x] = tmp
+        }
+    }
     var btn1 = document.getElementById("add")
     $("#cityInput").autocomplete({
         source: cities,
-        select: function (event,ui){ //ui.item.label
+        select: function (event, ui) { //ui.item.label
             document.getElementById("cityInput").innerText = ui.item.label
-            setTimeout(() =>{
+            setTimeout(() => {
                 btn1.click()
-            },100)
+                document.getElementById("cityInput").blur()
+            }, 100)
 
         }
 
