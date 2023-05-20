@@ -1,5 +1,6 @@
 body {
-    margin: 2px;
+    margin: 20px;
+    max-width: 900px;
 }
 
 #main{
@@ -8,7 +9,7 @@ body {
 
 .btn-xl {
     padding: 18px 28px;
-    font-size: 26px;
+    font-size: 2em;
     line-height: normal;
     -webkit-border-radius: 8px;
     -moz-border-radius: 8px;
@@ -20,12 +21,15 @@ body {
     --bs-gutter-y: 0;
 }
 
-#header1, #selectedCity {
+#header1{
     border-bottom: 2px solid #80b3ff;
 }
 
-#footer1 {
+#footer1, #wnH {
     border-top: 2px solid #80b3ff;
+}
+#wnH{
+    padding-top: 20px;
 }
 
 #headerText {
@@ -35,12 +39,12 @@ body {
     background: #0dcaf0;
 }
 .card{
-    max-width: 700px;
+    max-width: 900px;
 }
 
 #selectedCity {
     max-width: 700px;
-    padding-bottom: 30px;
+    padding-bottom: 10px;
 }
 
 #cb1 {
@@ -50,20 +54,26 @@ body {
 
 .c1 {
     display: inline-block;
+    font-size: 2em;
 }
 
 .c2 {
+    display: inline-block;
     float: right;
+    font-size: 1.4em;
 }
 
 .c3 {
-    font-size: 55px;
+    font-size: 75px;
 }
 
 #t3 {
     display: inline-block;
 }
+#cb3{
 
+    font-size: 1.5em;
+}
 .day {
     background-image: url("icons/day.png");
 }
@@ -78,13 +88,58 @@ body {
 }
 
 .c4 {
-    font-size: 40px;
+    font-size: 3em;
 }
-
+#t4{
+    font-size: 1.5em;
+}
 #c4img {
+    display: inline-block;
     float: right;
 }
 
 .fellsLike {
     text-align: center;
+}
+.fellsLike p{
+    font-size: 1.2em;
+}
+.tb{
+    font-size: 1.2em;
+}
+.btn-air {
+    padding: 5px 12px;
+    font-size: 1.8em;
+    line-height: normal;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    border-radius: 8px;
+}
+.airQualityH{
+    font-size: 1.8em;
+    text-align: center;
+}
+html, body {
+    height: 100%;
+
+}
+
+html {
+    display: table;
+    margin: auto;
+}
+
+body {
+    padding-top: 30px;
+    display: table-cell;
+    vertical-align: top;
+}
+
+#newsDiv{
+    max-width: 696px;
+}
+#blank{
+    width: 696px;
+    max-width: fit-content;
+    color: white;
 }

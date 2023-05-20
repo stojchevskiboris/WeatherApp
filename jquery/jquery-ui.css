@@ -832,7 +832,8 @@ body .ui-tooltip {
 .ui-widget {
 	/*font-family: Trebuchet MS,Tahoma,Verdana,Arial,sans-serif;*/
 	font-family: system-ui;
-	font-size: 1.1em;
+	font-size: 2em;
+
 }
 .ui-widget .ui-widget {
 	font-size: 1em;
@@ -873,12 +874,14 @@ body .ui-tooltip {
 	background: #f6f6f6 url("images/ui-bg_glass_100_f6f6f6_1x400.png") 50% 50% repeat-x;
 	font-weight: bold;
 	color: #1c94c4;
+	font-size: 30px;
 }
 .ui-state-default a,
 .ui-state-default a:link,
 .ui-state-default a:visited {
 	color: #1c94c4;
 	text-decoration: none;
+	font-size: 30px;
 }
 .ui-state-hover,
 .ui-widget-content .ui-state-hover,
@@ -886,6 +889,7 @@ body .ui-tooltip {
 .ui-state-focus,
 .ui-widget-content .ui-state-focus,
 .ui-widget-header .ui-state-focus {
+	font-size: 30px;
 	border: 1px solid #003aff;
 	border-radius: 5px;
 	background: #f3f3ff;
@@ -910,6 +914,7 @@ body .ui-tooltip {
 	background: #ffffff url("images/ui-bg_glass_65_ffffff_1x400.png") 50% 50% repeat-x;
 	font-weight: bold;
 	color: #eb8f00;
+	font-size: 30px;
 }
 .ui-state-active a,
 .ui-state-active a:link,
@@ -943,16 +948,19 @@ body .ui-tooltip {
 .ui-widget-content .ui-state-error a,
 .ui-widget-header .ui-state-error a {
 	color: #ffffff;
+
 }
 .ui-state-error-text,
 .ui-widget-content .ui-state-error-text,
 .ui-widget-header .ui-state-error-text {
 	color: #ffffff;
+
 }
 .ui-priority-primary,
 .ui-widget-content .ui-priority-primary,
 .ui-widget-header .ui-priority-primary {
 	font-weight: bold;
+
 }
 .ui-priority-secondary,
 .ui-widget-content .ui-priority-secondary,
@@ -960,6 +968,7 @@ body .ui-tooltip {
 	opacity: .7;
 	filter:Alpha(Opacity=70); /* support: IE8 */
 	font-weight: normal;
+
 }
 .ui-state-disabled,
 .ui-widget-content .ui-state-disabled,
@@ -967,6 +976,7 @@ body .ui-tooltip {
 	opacity: .35;
 	filter:Alpha(Opacity=35); /* support: IE8 */
 	background-image: none;
+
 }
 .ui-state-disabled .ui-icon {
 	filter:Alpha(Opacity=35); /* support: IE8 - See #6059 */

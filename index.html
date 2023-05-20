@@ -18,9 +18,9 @@
 
 
 </head>
-<body class="container-sm">
+<body >
 
-<header id="header1" class="navbar navbar-dark  mb-3">
+<header id="header1" class="navbar navbar-dark  mb-3 maxwidth">
     <img src="icons/weather.png" height="100" width="100"/>
     <p id="headerText" class="nav nav-item">Weather App</p>
     <img src="icons/weather.png" height="100" width="100"/>
@@ -28,7 +28,10 @@
 </header>
 <br>
 
+<div id="blank">.</div>
+
 <div>
+
     <input onkeyup="inAuto()" class="btn-xl border-primary btn-group" placeholder="City, Country" type="text"
            id="cityInput">
     <button class="btn btn-xl btn-primary " id="add">Search</button>
@@ -42,11 +45,11 @@
         <div id="card1" class="card">
             <div class="card-header">
                 <h5 class="c1" id="t1">City, Country</h5>
-                <span class="c2 ">Last updated: <span id="t2"></span></span>
+                <span class="c2 ">Local time: <span id="t2"></span></span>
             </div>
             <div id="cb1" class="card-body cb-shadow">
                 <h5 class="card-title c3 color2" id="t3">Temperature</h5>
-                <img id="c4img" src="" width="80px" height="80px">
+                <img id="c4img" src="" width="100px" height="100px">
                 <p class="card-text color2" id="t4">Weather</p>
             </div>
         </div>
@@ -55,12 +58,12 @@
 
         <div class="card">
             <div class="card-body">
-                <h6 class="card-title">Weather today in <span id="t5"></span></h6>
+                <h6 id="cb3" class="card-title">Weather today in <span id="t5"></span></h6>
                 <div class="fellsLike">
                     <span class="c4" id="t6">Temperature</span><br>
                     <p>Feels Like</p><br>
                 </div>
-                <div class="row">
+                <div class="row tb">
                     <div class="col">
                         <div class="item border-bottom pb-2 mb-2 me-2">
                             <img src="icons/weather/high_low.png" height="30" width="30"/>
@@ -116,9 +119,10 @@
                 </div>
                 <br>
 
-                <button id="airButton" class="btn btn-outline-primary mb-2">Air Quality</button>
+                <button id="airButton" class="btn btn-air btn-outline-primary mb-2">Air Quality</button>
 
-                <div class="row" id="airQ" style="display:none">
+                <div class="row tb" id="airQ" style="display:none">
+                    <p class="airQualityH">Air Quality</p>
                     <div class="col">
                         <div class="item border-bottom pb-2 mb-2 me-2">
                             <span style="font-weight: bold">Carbon Monoxide</span>
@@ -173,7 +177,7 @@
 
     <br><br>
 
-    <h3>World news</h3>
+    <h3 id="wnH">World news</h3>
     <br>
     <div id="newsDiv">
         <img src="icons/loading.gif" height="50" width="50"/>

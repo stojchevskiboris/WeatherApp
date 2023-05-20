@@ -33,7 +33,7 @@ $(document).ready(function () {
         document.getElementById("selectedCity").style.display = "block"
         // First Card
         document.getElementById("t1").innerText = json.location.name + ", " + json.location.country
-        document.getElementById("t2").innerText = json.location.localtime.slice(11, 16)
+        document.getElementById("t2").innerText = json.location.localtime.slice(-5)
         document.getElementById("t3").innerText = json.current.temp_c + "°"
         document.getElementById("c4img").src = json.current.condition.icon
         document.getElementById("t4").innerText = json.current.condition.text
@@ -69,10 +69,15 @@ $(document).ready(function () {
         }
 
         var el = document.getElementById("cb1")
-        if (json.current.is_day == 0)
+        var is_day = json.current.is_day
+        if (is_day == 0) {
+            el.classList.remove("day")
             el.classList.add("night")
-        else
+        }
+        else {
+            el.classList.remove("night")
             el.classList.add("day")
+        }
     }
 
     let input = document.getElementById("cityInput");
