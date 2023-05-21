@@ -6,8 +6,11 @@ headers.append('Access-Control-Allow-Origin', '*');
 $(document).ready(function () {
 
 
-    $("#add").click(async function myfunc(str) {
+
+    $("#add").click(async function myfunc() {
         let city = $("#cityInput").val()
+        if (city=="")
+            return
         // https://api.weatherapi.com/v1/forecast.json?key=19a1d968ac214ba2b3d195557233001&q=%27resen%20mkd%27&days=9&aqi=yes&alerts=no
         let url = 'https://api.weatherapi.com/v1/forecast.json?key=19a1d968ac214ba2b3d195557233001&q=' + city + '&days=9&aqi=yes&alerts=no'
         let request = new Request(url, {
@@ -128,6 +131,44 @@ $(document).ready(function () {
     }
 
     news2();
+
+
+    var loc = "http://ip-api.com/json/"
+    let t1 = ''
+    let t2 = ''
+    let locJson
+    fetch('https://api.ipify.org/?format=json')
+        .then((res) => res.json())
+        .then((data) => {
+            t1 = data.ip.toString()
+        })
+
+
+
+    var btn2 = document.getElementById("add")
+
+
+    document.getElementById("loc").onclick = function (){
+        setTimeout(()=>{
+            t2 = loc+t1
+            fetch(t2)
+                .then((response)=>response.json())
+                .then((data)=>{
+                    locJson = data
+                })
+            setTimeout(()=>{
+                document.getElementById("cityInput").value = locJson.city + ", " + locJson.country
+                setTimeout(() => {
+                    btn2.click()
+                    document.getElementById("cityInput").blur()
+                }, 100)
+            },200)
+        },700)
+
+    }
+
+
+
 })
 
 function removeDuplicates(arr) {

@@ -152,3 +152,11 @@ body {
 input[type=search]::-webkit-search-cancel-button {
     -webkit-appearance: searchfield-cancel-button;
 }
+#loc{
+    width: 80px;
+    background-image: url("icons/loc.png");
+    background-repeat: no-repeat;
+    background-size: 80% 78%;
+    background-position-y: 10px;
+    background-position: center;
+}
