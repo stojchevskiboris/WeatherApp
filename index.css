@@ -160,3 +160,15 @@ input[type=search]::-webkit-search-cancel-button {
     background-position-y: 10px;
     background-position: center;
 }
+#error{
+    font-size: 1.5em;
+    color: #da5151;
+}
+
+.displayNone{
+    display: none;
+}
+
+.displayBlock{
+    display: block;
+}

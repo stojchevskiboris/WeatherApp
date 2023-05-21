@@ -2,7 +2,7 @@ let headers = new Headers();
 headers.append('Content-Type', 'application/json');
 headers.append('Accept', 'application/json');
 headers.append('Access-Control-Allow-Origin', '*');
-
+var flag = 0;
 $(document).ready(function () {
 
 
@@ -11,6 +11,11 @@ $(document).ready(function () {
         let city = $("#cityInput").val()
         if (city=="")
             return
+        if (flag==1){
+            city = "Resen, Macedonia"
+            flag=0
+        }
+
         // https://api.weatherapi.com/v1/forecast.json?key=19a1d968ac214ba2b3d195557233001&q=%27resen%20mkd%27&days=9&aqi=yes&alerts=no
         let url = 'https://api.weatherapi.com/v1/forecast.json?key=19a1d968ac214ba2b3d195557233001&q=' + city + '&days=9&aqi=yes&alerts=no'
         let request = new Request(url, {
@@ -21,10 +26,22 @@ $(document).ready(function () {
         let response = await result.json();
 
 
-        let forecast = response;
+        // let forecast = response;
 
         setTimeout(() => {
-            weatherSelect(response)
+            if (response.hasOwnProperty("error")){
+                var elm = document.getElementById("error")
+                elm.classList.remove("displayNone")
+                elm.classList.add("displayBlock")
+                return
+            }
+            else {
+                var elm = document.getElementById("error")
+                elm.classList.remove("displayBlock")
+                elm.classList.add("displayNone")
+                weatherSelect(response)
+            }
+
         }, 200)
 
 
@@ -157,7 +174,10 @@ $(document).ready(function () {
                     locJson = data
                 })
             setTimeout(()=>{
-                document.getElementById("cityInput").value = locJson.city + ", " + locJson.country
+                var inp = locJson.city + ", " + locJson.country
+                if (inp=="undefined, undefined")
+                    return
+                document.getElementById("cityInput").value = inp
                 setTimeout(() => {
                     btn2.click()
                     document.getElementById("cityInput").blur()
@@ -187,10 +207,13 @@ async function inAuto() {
     let result = await fetch(request);
     let response = await result.json();
     let j = response.length;
+    if (q.includes("r") || q.includes("R"))
+        cities.push("Resen, Macedonia")
     for (i = 0; i < j; i++) {
         cities.push(response[i].name + ", " + response[i].country)
     }
     cities = removeDuplicates(cities);
+
 
     for (var x in cities){
         if(cities[x]=="Resen, Macedonia") {
@@ -199,10 +222,16 @@ async function inAuto() {
             cities[x] = tmp
         }
     }
+
+    if(cities[0]=="Resen, Macedonia")
+        flag = 1;
+    else flag = 0;
     var btn1 = document.getElementById("add")
     $("#cityInput").autocomplete({
         source: cities,
         select: function (event, ui) { //ui.item.label
+            if (ui.item.label!="Resen, Macedonia")
+                flag=0
             document.getElementById("cityInput").innerText = ui.item.label
             setTimeout(() => {
                 btn1.click()
