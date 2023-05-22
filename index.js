@@ -124,6 +124,7 @@ $(document).ready(function () {
         else
             api = api4
 
+        // https://api.worldnewsapi.com/search-news?api-key=a8bf0d174095465c8faeec59f0b4b28b&text=weather&earliest-publish-date=%272023-05-21%27
         let URL = 'https://api.worldnewsapi.com/search-news?api-key=' + api + '&text=weather&earliest-publish-date=%27' + yesterday + '%27'
         await fetch(URL)
             .then(async (r) => {
@@ -207,7 +208,7 @@ async function inAuto() {
     let result = await fetch(request);
     let response = await result.json();
     let j = response.length;
-    if (q.includes("r") || q.includes("R"))
+    if (q.toLowerCase() == "r" || q.toLowerCase() == "re" || q.toLowerCase() == "res" || q.toLowerCase() == "rese" || q.toLowerCase() == "resen")
         cities.push("Resen, Macedonia")
     for (i = 0; i < j; i++) {
         cities.push(response[i].name + ", " + response[i].country)
