@@ -169,6 +169,7 @@ $(document).ready(function () {
 
 
     document.getElementById("loc").onclick = function (){
+        document.getElementById("cityInput").value = "Searching..."
         setTimeout(()=>{
             t2 = loc+t1 + "/json"
             console.log(t2)

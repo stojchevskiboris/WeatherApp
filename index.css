@@ -13,12 +13,19 @@ body {
 }
 
 .btn-xl {
-    padding: 18px 28px;
+    padding: 18px 30px;
     font-size: 2em;
     line-height: normal;
     -webkit-border-radius: 8px;
     -moz-border-radius: 8px;
     border-radius: 8px;
+}
+
+#controls{
+    text-align-last: justify;
+}
+#cityInput{
+    text-align-last: start;
 }
 
 .row {

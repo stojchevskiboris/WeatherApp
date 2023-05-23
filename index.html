@@ -32,165 +32,170 @@
 
 <div>
 
-    <input onkeyup="inAuto()" class="btn-xl border-primary btn-group deletable" placeholder="City, Country"
-           type="search"
-           id="cityInput">
-    <button class="btn btn-xl btn-primary " id="add">Search</button>
-    <button class="btn btn-xl btn-primary " id="loc">⠀</button>
-    <p id="error" class="displayNone">No matching location found.</p>
+    <div id="controls">
+
+
+        <input onkeyup="inAuto()"
+               class="btn-xl border-primary btn-group deletable"
+               placeholder="City, Country" type="search"
+               id="cityInput">
+        <button class="btn btn-xl btn-primary " id="add">Search</button>
+        <button class="btn btn-xl btn-primary " id="loc">⠀</button>
+        <p id="error" class="displayNone">No matching location found.</p>
+    </div>
     <br><br><br><br>
 
-<div id="main" class="justify-content-center">
+    <div id="main" class="justify-content-center">
 
-    <div id="selectedCity" style="display: none">
+        <div id="selectedCity" style="display: none">
 
-        <div id="card1" class="card">
-            <div class="card-header">
-                <h5 class="c1" id="t1">City, Country</h5>
-                <span class="c2 ">Local time: <span id="t2"></span></span>
+            <div id="card1" class="card">
+                <div class="card-header">
+                    <h5 class="c1" id="t1">City, Country</h5>
+                    <span class="c2 ">Local time: <span id="t2"></span></span>
+                </div>
+                <div id="cb1" class="card-body cb-shadow">
+                    <h5 class="card-title c3 color2" id="t3">Temperature</h5>
+                    <img id="c4img" src="" width="100px" height="100px">
+                    <p class="card-text color2" id="t4">Weather</p>
+                </div>
             </div>
-            <div id="cb1" class="card-body cb-shadow">
-                <h5 class="card-title c3 color2" id="t3">Temperature</h5>
-                <img id="c4img" src="" width="100px" height="100px">
-                <p class="card-text color2" id="t4">Weather</p>
+
+            <br>
+
+            <div class="card">
+                <div class="card-body">
+                    <h6 id="cb3" class="card-title">Weather today in <span id="t5"></span></h6>
+                    <div class="fellsLike">
+                        <span class="c4" id="t6">Temperature</span><br>
+                        <p>Feels Like</p><br>
+                    </div>
+                    <div class="row tb">
+                        <div class="col">
+                            <div class="item border-bottom pb-2 mb-2 me-2">
+                                <img src="icons/weather/high_low.png" height="30" width="30"/>
+                                <span style="font-weight: bold">High / Low</span>
+                                <span class="float-end" id="t7"></span>
+                            </div>
+
+                            <div class="item border-bottom pb-2 mb-2 me-2">
+                                <img src="icons/weather/humidity.png" height="30" width="30"/>
+                                <span style="font-weight: bold">Humidity</span>
+                                <span class="float-end" id="t8"></span>
+                            </div>
+
+                            <div class="item border-bottom pb-2 mb-2 me-2">
+                                <img src="icons/weather/pressure.png" height="30" width="30"/>
+                                <span style="font-weight: bold">Pressure</span>
+                                <span class="float-end" id="t9"></span>
+                            </div>
+
+                            <div class="item pb-2 mb-2 me-2">
+                                <img src="icons/weather/visibility.png" height="30" width="30"/>
+                                <span style="font-weight: bold">Visibility</span>
+                                <span class="float-end" id="t10"></span>
+                            </div>
+
+                        </div>
+                        <div class="col">
+                            <div class="item border-bottom pb-2 mb-2 ms-2">
+                                <img src="icons/weather/wind.png" height="30" width="30"/>
+                                <span style="font-weight: bold">Wind</span>
+                                <span class="float-end" id="t11"></span>
+                            </div>
+
+                            <div class="item border-bottom pb-2 mb-2 ms-2">
+                                <img src="icons/weather/uv_index.png" height="30" width="30"/>
+                                <span style="font-weight: bold">UV Index</span>
+                                <span class="float-end" id="t12"></span>
+                            </div>
+
+                            <div class="item border-bottom pb-2 mb-2 ms-2">
+                                <img src="icons/weather/cloud.PNG" height="30" width="30"/>
+                                <span style="font-weight: bold">Clouds</span>
+                                <span class="float-end" id="t13"></span>
+                            </div>
+
+                            <div class="item pb-2 mb-2 ms-2">
+                                <img src="icons/weather/precipation.png" height="30" width="30"/>
+                                <span style="font-weight: bold">Precipitation</span>
+                                <span class="float-end" id="t14"></span>
+                            </div>
+                        </div>
+
+                    </div>
+                    <br>
+
+                    <button id="airButton" class="btn btn-air btn-outline-primary mb-2">Air Quality</button>
+
+                    <div class="row tb" id="airQ" style="display:none">
+                        <p class="airQualityH">Air Quality</p>
+                        <div class="col">
+                            <div class="item border-bottom pb-2 mb-2 me-2">
+                                <span style="font-weight: bold">Carbon Monoxide</span>
+                                <span class="float-end" id="t15"></span>
+                            </div>
+
+                            <div class="item border-bottom pb-2 mb-2 me-2">
+                                <span style="font-weight: bold">Nitrogen dioxide</span>
+                                <span class="float-end" id="t16"></span>
+                            </div>
+
+                            <div class="item border-bottom pb-2 mb-2 me-2">
+                                <span style="font-weight: bold">Ozone</span>
+                                <span class="float-end" id="t17"></span>
+                            </div>
+
+                            <div class="item pb-2 mb-2 me-2">
+                                <span style="font-weight: bold">Sulphur dioxide</span>
+                                <span class="float-end" id="t18"></span>
+                            </div>
+
+                        </div>
+                        <div class="col">
+                            <div class="item border-bottom pb-2 mb-2 ms-2">
+                                <span style="font-weight: bold">PM2.5</span>
+                                <span class="float-end" id="t19"></span>
+                            </div>
+
+                            <div class="item border-bottom pb-2 mb-2 ms-2">
+                                <span style="font-weight: bold">PM10</span>
+                                <span class="float-end" id="t20"></span>
+                            </div>
+
+                            <div class="item border-bottom pb-2 mb-2 ms-2">
+                                <span style="font-weight: bold">US - EPA standard</span>
+                                <span class="float-end" id="t21"></span>
+                            </div>
+
+                            <div class="item pb-2 mb-2 ms-2">
+                                <span style="font-weight: bold">UK Defra Index</span>
+                                <span class="float-end" id="t22"></span>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
             </div>
+
         </div>
+        <!--<h6>Forecast coming soon</h6>-->
 
+        <br><br>
+
+        <h3 id="wnH">World news</h3>
         <br>
-
-        <div class="card">
-            <div class="card-body">
-                <h6 id="cb3" class="card-title">Weather today in <span id="t5"></span></h6>
-                <div class="fellsLike">
-                    <span class="c4" id="t6">Temperature</span><br>
-                    <p>Feels Like</p><br>
-                </div>
-                <div class="row tb">
-                    <div class="col">
-                        <div class="item border-bottom pb-2 mb-2 me-2">
-                            <img src="icons/weather/high_low.png" height="30" width="30"/>
-                            <span style="font-weight: bold">High / Low</span>
-                            <span class="float-end" id="t7"></span>
-                        </div>
-
-                        <div class="item border-bottom pb-2 mb-2 me-2">
-                            <img src="icons/weather/humidity.png" height="30" width="30"/>
-                            <span style="font-weight: bold">Humidity</span>
-                            <span class="float-end" id="t8"></span>
-                        </div>
-
-                        <div class="item border-bottom pb-2 mb-2 me-2">
-                            <img src="icons/weather/pressure.png" height="30" width="30"/>
-                            <span style="font-weight: bold">Pressure</span>
-                            <span class="float-end" id="t9"></span>
-                        </div>
-
-                        <div class="item pb-2 mb-2 me-2">
-                            <img src="icons/weather/visibility.png" height="30" width="30"/>
-                            <span style="font-weight: bold">Visibility</span>
-                            <span class="float-end" id="t10"></span>
-                        </div>
-
-                    </div>
-                    <div class="col">
-                        <div class="item border-bottom pb-2 mb-2 ms-2">
-                            <img src="icons/weather/wind.png" height="30" width="30"/>
-                            <span style="font-weight: bold">Wind</span>
-                            <span class="float-end" id="t11"></span>
-                        </div>
-
-                        <div class="item border-bottom pb-2 mb-2 ms-2">
-                            <img src="icons/weather/uv_index.png" height="30" width="30"/>
-                            <span style="font-weight: bold">UV Index</span>
-                            <span class="float-end" id="t12"></span>
-                        </div>
-
-                        <div class="item border-bottom pb-2 mb-2 ms-2">
-                            <img src="icons/weather/cloud.PNG" height="30" width="30"/>
-                            <span style="font-weight: bold">Clouds</span>
-                            <span class="float-end" id="t13"></span>
-                        </div>
-
-                        <div class="item pb-2 mb-2 ms-2">
-                            <img src="icons/weather/precipation.png" height="30" width="30"/>
-                            <span style="font-weight: bold">Precipitation</span>
-                            <span class="float-end" id="t14"></span>
-                        </div>
-                    </div>
-
-                </div>
-                <br>
-
-                <button id="airButton" class="btn btn-air btn-outline-primary mb-2">Air Quality</button>
-
-                <div class="row tb" id="airQ" style="display:none">
-                    <p class="airQualityH">Air Quality</p>
-                    <div class="col">
-                        <div class="item border-bottom pb-2 mb-2 me-2">
-                            <span style="font-weight: bold">Carbon Monoxide</span>
-                            <span class="float-end" id="t15"></span>
-                        </div>
-
-                        <div class="item border-bottom pb-2 mb-2 me-2">
-                            <span style="font-weight: bold">Nitrogen dioxide</span>
-                            <span class="float-end" id="t16"></span>
-                        </div>
-
-                        <div class="item border-bottom pb-2 mb-2 me-2">
-                            <span style="font-weight: bold">Ozone</span>
-                            <span class="float-end" id="t17"></span>
-                        </div>
-
-                        <div class="item pb-2 mb-2 me-2">
-                            <span style="font-weight: bold">Sulphur dioxide</span>
-                            <span class="float-end" id="t18"></span>
-                        </div>
-
-                    </div>
-                    <div class="col">
-                        <div class="item border-bottom pb-2 mb-2 ms-2">
-                            <span style="font-weight: bold">PM2.5</span>
-                            <span class="float-end" id="t19"></span>
-                        </div>
-
-                        <div class="item border-bottom pb-2 mb-2 ms-2">
-                            <span style="font-weight: bold">PM10</span>
-                            <span class="float-end" id="t20"></span>
-                        </div>
-
-                        <div class="item border-bottom pb-2 mb-2 ms-2">
-                            <span style="font-weight: bold">US - EPA standard</span>
-                            <span class="float-end" id="t21"></span>
-                        </div>
-
-                        <div class="item pb-2 mb-2 ms-2">
-                            <span style="font-weight: bold">UK Defra Index</span>
-                            <span class="float-end" id="t22"></span>
-                        </div>
-                    </div>
-
-                </div>
-
-            </div>
+        <div id="newsDiv">
+            <img src="icons/loading.gif" height="50" width="50"/>
+            Loading news
         </div>
 
     </div>
-    <!--<h6>Forecast coming soon</h6>-->
-
-    <br><br>
-
-    <h3 id="wnH">World news</h3>
-    <br>
-    <div id="newsDiv">
-        <img src="icons/loading.gif" height="50" width="50"/>
-        Loading news
-    </div>
-
-</div>
-<br> <br> <br> <br> <br> <br> <br>
-<footer id="footer1">
-    <p>&copy;<a class="link-secondary" href="https://github.com/stojchevskiboris">Boris Stojchevski</a></p>
-</footer>
+    <br> <br> <br> <br> <br> <br> <br>
+    <footer id="footer1">
+        <p>&copy;<a class="link-secondary" href="https://github.com/stojchevskiboris">Boris Stojchevski</a></p>
+    </footer>
 </div>
 </body>
 </html>
