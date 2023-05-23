@@ -8,6 +8,7 @@ $(document).ready(function () {
 
 
     $("#add").click(async function myfunc() {
+        document.getElementById("cityInput").blur()
         let city = $("#cityInput").val()
         if (city=="")
             return
@@ -101,6 +102,7 @@ $(document).ready(function () {
     input.addEventListener("keypress", function (event) {
         if (event.key === "Enter") {
             event.preventDefault();
+            document.getElementById("cityInput").blur()
             document.getElementById("add").click();
         }
     });
@@ -151,7 +153,7 @@ $(document).ready(function () {
     news2();
 
 
-    var loc = "http://ip-api.com/json/"
+    var loc = "https://ipapi.co/"
     let t1 = ''
     let t2 = ''
     let locJson
@@ -168,22 +170,24 @@ $(document).ready(function () {
 
     document.getElementById("loc").onclick = function (){
         setTimeout(()=>{
-            t2 = loc+t1
+            t2 = loc+t1 + "/json"
+            console.log(t2)
             fetch(t2)
                 .then((response)=>response.json())
                 .then((data)=>{
-                    locJson = data
+                    setTimeout(()=>{
+                        //console.log(locJson)
+                        var inp = data.city + ", " + data.country
+                        if (inp=="undefined, undefined")
+                            return
+                        document.getElementById("cityInput").value = inp
+                        setTimeout(() => {
+                            btn2.click()
+                            document.getElementById("cityInput").blur()
+                        }, 500)
+                    },200)
                 })
-            setTimeout(()=>{
-                var inp = locJson.city + ", " + locJson.country
-                if (inp=="undefined, undefined")
-                    return
-                document.getElementById("cityInput").value = inp
-                setTimeout(() => {
-                    btn2.click()
-                    document.getElementById("cityInput").blur()
-                }, 100)
-            },200)
+
         },700)
 
     }
