@@ -32,15 +32,23 @@
 
 <div>
 
-    <div id="controls">
+    <div id="controls" class="row">
+        <div class="col-8">
+            <input onkeyup="inAuto()"
+                   class="form-control deletable"
+                   placeholder="City, Country"
+                   type="search"
+                   id="cityInput">
+        </div>
+        <div class="col-2">
+            <button class="btn btn-primary " id="add">Search</button>
 
+        </div>
+        <div class="col-2">
+            <button class="btn btn-primary " id="loc">⠀</button>
 
-        <input onkeyup="inAuto()"
-               class="btn-xl border-primary btn-group deletable"
-               placeholder="City, Country" type="search"
-               id="cityInput">
-        <button class="btn btn-xl btn-primary " id="add">Search</button>
-        <button class="btn btn-xl btn-primary " id="loc">⠀</button>
+        </div>
+
         <p id="error" class="displayNone">No matching location found.</p>
     </div>
     <br><br><br><br>
