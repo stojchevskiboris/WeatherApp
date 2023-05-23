@@ -31,29 +31,31 @@
 <div id="blank">.</div>
 
 <div>
+    <div id="main">
+        <div id="controls" class="row">
+            <div class="col-8">
+                <input onkeyup="inAuto()"
+                       class="form-control deletable"
+                       placeholder="City, Country"
+                       type="search"
+                       id="cityInput">
+            </div>
+            <div class="col-2">
+                <button class="btn btn-primary " id="add">Search</button>
 
-    <div id="controls" class="row">
-        <div class="col-8">
-            <input onkeyup="inAuto()"
-                   class="form-control deletable"
-                   placeholder="City, Country"
-                   type="search"
-                   id="cityInput">
+            </div>
+            <div class="col-2">
+                <button class="btn btn-primary " id="loc">⠀</button>
+
+            </div>
+
+
         </div>
-        <div class="col-2">
-            <button class="btn btn-primary " id="add">Search</button>
-
-        </div>
-        <div class="col-2">
-            <button class="btn btn-primary " id="loc">⠀</button>
-
-        </div>
-
         <p id="error" class="displayNone">No matching location found.</p>
-    </div>
-    <br><br><br><br>
+        <p id="error2" class="displayNone">Please enter data.</p>
 
-    <div id="main" class="justify-content-center">
+        <br><br><br><br>
+
 
         <div id="selectedCity" style="display: none">
 
@@ -190,16 +192,22 @@
         </div>
         <!--<h6>Forecast coming soon</h6>-->
 
-        <br><br>
-
-        <h3 id="wnH">World news</h3>
-        <br>
-        <div id="newsDiv">
-            <img src="icons/loading.gif" height="50" width="50"/>
-            Loading news
-        </div>
 
     </div>
+    <br><br>
+
+    <h3 id="wnH">World news</h3>
+
+    <div id="newsDiv">
+        <img src="icons/loading.gif" height="50" width="50"/>
+        Loading news
+    </div>
+
+    <div id="newsDiv2">
+
+    </div>
+
+
     <br> <br> <br> <br> <br> <br> <br>
     <footer id="footer1">
         <p>&copy;<a class="link-secondary" href="https://github.com/stojchevskiboris">Boris Stojchevski</a></p>

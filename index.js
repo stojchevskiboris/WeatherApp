@@ -5,13 +5,23 @@ headers.append('Access-Control-Allow-Origin', '*');
 var flag = 0;
 $(document).ready(function () {
 
+    setTimeout(()=>{
+        document.getElementById("loc").click()
+    },2000)
 
 
     $("#add").click(async function myfunc() {
         document.getElementById("cityInput").blur()
+        var er2 = document.getElementById("error2")
         let city = $("#cityInput").val()
-        if (city=="")
+        if (city==""){
+            er2.classList.remove("displayNone")
+            er2.classList.add("displayBlock")
             return
+        }
+        er2.classList.remove("displayBlock")
+        er2.classList.add("displayNone")
+
         if (flag==1){
             city = "Resen, Macedonia"
             flag=0
@@ -34,6 +44,10 @@ $(document).ready(function () {
                 var elm = document.getElementById("error")
                 elm.classList.remove("displayNone")
                 elm.classList.add("displayBlock")
+                setTimeout(()=>{
+                    elm.classList.remove("displayBlock")
+                    elm.classList.add("displayNone")
+                },20000)
                 return
             }
             else {
@@ -127,7 +141,7 @@ $(document).ready(function () {
             api = api4
 
         // https://api.worldnewsapi.com/search-news?api-key=a8bf0d174095465c8faeec59f0b4b28b&text=weather&earliest-publish-date=%272023-05-21%27
-        let URL = 'https://api.worldnewsapi.com/search-news?api-key=' + api + '&text=weather&earliest-publish-date=%27' + yesterday + '%27'
+        let URL = 'https://api.worldnewsapi.com/search-news?api-key=' + api + '&text=climate&earliest-publish-date=%27' + yesterday + '%27'
         await fetch(URL)
             .then(async (r) => {
                 response = await r.json();
@@ -150,7 +164,50 @@ $(document).ready(function () {
         document.getElementById("newsDiv").innerHTML = text
     }
 
+    const news2_2 = async () => {
+        let response;
+        let twoDaysAgo = new Date(Date.now() - 180000000).toLocaleString('sv').slice(0, 10)
+        const api1 = '9c6af65eb2604cf3adb6d23c77fdbe4e';
+        const api2 = 'e76922ff429b47e08f0fec14509aed2f';
+        const api3 = '6d9a728b40ea4600a9374e384982abca';
+        const api4 = 'a8bf0d174095465c8faeec59f0b4b28b';
+        var api = "";
+        var num = Math.random()
+        if (num < 0.25)
+            api = api1;
+        else if (num < 0.50)
+            api = api2;
+        else if (num < 0.75)
+            api = api3;
+        else
+            api = api4
+
+        // https://api.worldnewsapi.com/search-news?api-key=a8bf0d174095465c8faeec59f0b4b28b&text=weather&earliest-publish-date=%272023-05-21%27
+        let URL = 'https://api.worldnewsapi.com/search-news?api-key=' + api + '&text=climate&earliest-publish-date=%27' + twoDaysAgo + '%27'
+        await fetch(URL)
+            .then(async (r) => {
+                response = await r.json();
+            })
+
+        let newsArr = response.news;
+        let text = ""
+        for (let x in newsArr) {
+            var description = newsArr[x].text.slice(0, 400) + '... ' + "<a href = " + newsArr[x].url + " target=”_blank”>Continue reading</a>"
+            var newsDate = newsArr[x].publish_date.slice(0, 10)
+            text +=
+                "<div class='card'>" +
+                "<a href='" + newsArr[x].url + "' target=”_blank”> <img class='card-img-top card-img-custom' src='" + newsArr[x].image + "' alt='Image not available'></a>" +
+                "<div class='card-body'>" +
+                "<a href='" + newsArr[x].url + "' target=”_blank”><h5 class='card-title'>" + newsArr[x].title + "</h5></a>" +
+                "<p class='card-text'>" + description + "</p>" +
+                "<p class='card-text'><small class='text-muted'>" + '2 day ago, ' + newsDate.slice(8, 10) + "." + newsDate.slice(5, 7) + "." + newsDate.slice(0, 4) + "</small></p>" +
+                "</div></div><br>"
+        }
+        document.getElementById("newsDiv2").innerHTML = text
+    }
+
     news2();
+    news2_2();
 
 
     var loc = "https://ipapi.co/"
@@ -164,6 +221,7 @@ $(document).ready(function () {
         })
 
 
+    // https://ipapi.co/95.180.230.111/json/
 
     var btn2 = document.getElementById("add")
 
