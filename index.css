@@ -28,6 +28,7 @@ body {
 }
 #wnH{
     padding-top: 50px;
+    font-family: system-ui;
 }
 
 #headerText {
@@ -176,4 +177,11 @@ input[type=search]::-webkit-search-cancel-button {
     font-size: 1.7em;
     line-height: normal;
     height: 2.6em;
+}
+
+.gray{
+    color:darkgray;
+}
+.gray:focus{
+    color:darkgray;
 }
