@@ -143,16 +143,27 @@ $(document).ready(function () {
         var api = "";
         var num = Math.random().toString().slice(-1)
 
-        if (num == "0") {api = api0}
-        else if (num == "1") {api = api1}
-        else if (num == "2") {api = api2}
-        else if (num == "3") {api = api3}
-        else if (num == "4") {api = api4}
-        else if (num == "5") {api = api5}
-        else if (num == "6") {api = api6}
-        else if (num == "7") {api = api7}
-        else if (num == "8") {api = api8}
-        else {api = api9}
+        if (num == "0") {
+            api = api0
+        } else if (num == "1") {
+            api = api1
+        } else if (num == "2") {
+            api = api2
+        } else if (num == "3") {
+            api = api3
+        } else if (num == "4") {
+            api = api4
+        } else if (num == "5") {
+            api = api5
+        } else if (num == "6") {
+            api = api6
+        } else if (num == "7") {
+            api = api7
+        } else if (num == "8") {
+            api = api8
+        } else {
+            api = api9
+        }
 
         // https://api.worldnewsapi.com/search-news?api-key=a8bf0d174095465c8faeec59f0b4b28b&text=weather&earliest-publish-date=%272023-05-21%27
         let URL = 'https://api.worldnewsapi.com/search-news?api-key=' + api + '&text=climate&earliest-publish-date=%27' + yesterday + '%27'
@@ -194,16 +205,27 @@ $(document).ready(function () {
         var api = "";
         var num = Math.random().toString().slice(-1)
 
-        if (num == "0") {api = api0}
-        else if (num == "1") {api = api1}
-        else if (num == "2") {api = api2}
-        else if (num == "3") {api = api3}
-        else if (num == "4") {api = api4}
-        else if (num == "5") {api = api5}
-        else if (num == "6") {api = api6}
-        else if (num == "7") {api = api7}
-        else if (num == "8") {api = api8}
-        else {api = api9}
+        if (num == "0") {
+            api = api0
+        } else if (num == "1") {
+            api = api1
+        } else if (num == "2") {
+            api = api2
+        } else if (num == "3") {
+            api = api3
+        } else if (num == "4") {
+            api = api4
+        } else if (num == "5") {
+            api = api5
+        } else if (num == "6") {
+            api = api6
+        } else if (num == "7") {
+            api = api7
+        } else if (num == "8") {
+            api = api8
+        } else {
+            api = api9
+        }
 
         // https://api.worldnewsapi.com/search-news?api-key=a8bf0d174095465c8faeec59f0b4b28b&text=weather&earliest-publish-date=%272023-05-21%27
         let URL = 'https://api.worldnewsapi.com/search-news?api-key=' + api + '&text=climate&earliest-publish-date=%27' + twoDaysAgo + '%27'
@@ -303,28 +325,58 @@ $(document).ready(function () {
         document.getElementById("cityInput").readOnly = true
         document.getElementById("cityInput").classList.add("gray")
         document.getElementById("cityInput").value = "Searching..."
+
+        // setTimeout(() => {
+        //     t2 = loc + t1 + "/json"
+        //     console.log(t2)
+        //     fetch(t2)
+        //         .then((response) => response.json())
+        //         .then((data) => {
+        //             setTimeout(() => {
+        //                 //console.log(locJson)
+        //                 var inp = data.city + ", " + data.country
+        //                 document.getElementById("cityInput").readOnly = false
+        //                 if (inp == "undefined, undefined")
+        //                     return
+        //                 document.getElementById("cityInput").classList.remove("gray")
+        //                 document.getElementById("cityInput").value = inp
+        //                 setTimeout(() => {
+        //                     btn2.click()
+        //                     document.getElementById("cityInput").blur()
+        //                 }, 500)
+        //             }, 200)
+        //         })
+        //
+        // }, 700)
+
+        const http = new XMLHttpRequest();
+
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition((position) => {
+                },
+                (err) => {
+                    alert("Please allow location access")
+                })
+        } else {
+            alert("Geolocation is not supported by your browser")
+        }
         setTimeout(() => {
-            t2 = loc + t1 + "/json"
-            console.log(t2)
-            fetch(t2)
+            let url = 'https://us1.locationiq.com/v1/search?key=pk.0501cd34dcd7093c1b93bed3e08b036c&q=40.9829376%2021.0010112&format=json'
+            fetch(url)
                 .then((response) => response.json())
-                .then((data) => {
+                .then(data => {
                     setTimeout(() => {
-                        //console.log(locJson)
-                        var inp = data.city + ", " + data.country
                         document.getElementById("cityInput").readOnly = false
-                        if (inp == "undefined, undefined")
-                            return
                         document.getElementById("cityInput").classList.remove("gray")
-                        document.getElementById("cityInput").value = inp
+                        var loc = data[0].display_name
+                        document.getElementById("cityInput").value = loc
                         setTimeout(() => {
                             btn2.click()
                             document.getElementById("cityInput").blur()
-                        }, 500)
+                        }, 200)
                     }, 200)
                 })
-
-        }, 700)
+        }, 200)
 
     }
 

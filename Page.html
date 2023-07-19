@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TestPage</title>
+    <link rel="icon" type="image/x-icon" href="/icons/favicon.ico">
+    <link rel="stylesheet" href="jquery/jquery-ui.css">
+    <script src="jquery/jquery.js"></script>
+    <script src="jquery/jquery-ui.js"></script>
+    <link rel="stylesheet" href="Bootstrap/bootstrap.min.css"
+          integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+    <script src="Bootstrap/bootstrap.bundle.min.js"
+            integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
+            crossorigin="anonymous"></script>
+</head>
+<body>
+<button id="share">Share my Location</button>
+<pre id="result"></pre>
+</body>
+<script>
+    const http = new XMLHttpRequest();
+    let result = document.querySelector("#result");
+    document.querySelector("#share").addEventListener("click", () => {
+        findMyCoordinates()
+    })
+    function findMyCoordinates() {
+        if(navigator.geolocation){
+            console.log(navigator.geolocation.getCurrentPosition((position) => console.log(position)))
+            navigator.geolocation.getCurrentPosition((position) => {
+                document.getElementById("result").innerText = position.coords.latitude+ " " + position.coords.longitude
+                    console.log(position.coords.latitude, position.coords.longitude)
+                },
+                (err) => {
+                    alert(err.message)
+                })
+        } else {
+            alert("Geolocation is not supported by your browser")
+        }
+    }
+</script>
+</html>
