@@ -32,6 +32,8 @@ body {
 }
 
 #headerText {
+    user-select: none;
+    cursor: default;
     font-size: 50px;
 }
 #p{

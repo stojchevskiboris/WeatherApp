@@ -356,6 +356,8 @@ $(document).ready(function () {
             navigator.geolocation.getCurrentPosition((position) => {
                     lat = position.coords.latitude
                     long = position.coords.longitude
+                    // lat = "40.9896026"
+                    // long = "20.9152144"
                 },
                 (err) => {
                     alert("Please allow location access")
@@ -365,14 +367,33 @@ $(document).ready(function () {
         }
 
         setTimeout(() => {
-            let url = `https://us1.locationiq.com/v1/search?key=pk.0501cd34dcd7093c1b93bed3e08b036c&q=${lat}%20${long}&format=json`
+            // let url = `https://geocode.maps.co/search?q=${lat}%20${long}`
+            let url = `https://api.geoapify.com/v1/geocode/reverse?lat=${lat}&lon=${long}&apiKey=e2647227b3c44fceadfd964d38860d95`
             fetch(url)
                 .then((response) => response.json())
                 .then(data => {
+                    // console.log(lat)
+                    // console.log(long)
+                    // console.log(data.features[0].properties.city)
+                    // console.log(data.features[0].properties.country)
                     setTimeout(() => {
                         document.getElementById("cityInput").readOnly = false
                         document.getElementById("cityInput").classList.remove("gray")
-                        var loc = data[0].display_name
+                        // var loc = data[0].display_name
+                        var loc = data.features[0].properties.city + " " + data.features[0].properties.country
+                        if (data.features[0].properties.country == 'North Macedonia'){
+                            var fix = ''
+                            for (var i = 0;i<loc.length;i++){
+                                if (i+1<loc.length){
+                                    if ((loc[i]=='s' || loc[i] == 'S') && loc[i+1]=='h'){
+                                        fix = loc.slice(0,i+1) + loc.slice(i+2, loc.length)
+                                    }
+                                }
+                            }
+                            if (fix!='')
+                                loc=fix
+                        }
+
                         document.getElementById("cityInput").value = loc
                         setTimeout(() => {
                             btn2.click()

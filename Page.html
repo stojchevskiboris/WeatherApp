@@ -14,28 +14,9 @@
             crossorigin="anonymous"></script>
 </head>
 <body>
-<button id="share">Share my Location</button>
-<pre id="result"></pre>
+
 </body>
 <script>
-    const http = new XMLHttpRequest();
-    let result = document.querySelector("#result");
-    document.querySelector("#share").addEventListener("click", () => {
-        findMyCoordinates()
-    })
-    function findMyCoordinates() {
-        if(navigator.geolocation){
-            console.log(navigator.geolocation.getCurrentPosition((position) => console.log(position)))
-            navigator.geolocation.getCurrentPosition((position) => {
-                document.getElementById("result").innerText = position.coords.latitude+ " " + position.coords.longitude
-                    console.log(position.coords.latitude, position.coords.longitude)
-                },
-                (err) => {
-                    alert(err.message)
-                })
-        } else {
-            alert("Geolocation is not supported by your browser")
-        }
-    }
+    let q = 'R1307, Oteshevo, Municipality of Resen, Pelagonia Region, 7319, North Macedonia'
 </script>
 </html>
