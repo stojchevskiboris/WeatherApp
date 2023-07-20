@@ -348,11 +348,14 @@ $(document).ready(function () {
         //         })
         //
         // }, 700)
-
+        var lat = ""
+        var long = ""
         const http = new XMLHttpRequest();
 
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition((position) => {
+                    lat = position.coords.latitude
+                    long = position.coords.longitude
                 },
                 (err) => {
                     alert("Please allow location access")
@@ -360,8 +363,9 @@ $(document).ready(function () {
         } else {
             alert("Geolocation is not supported by your browser")
         }
+
         setTimeout(() => {
-            let url = 'https://us1.locationiq.com/v1/search?key=pk.0501cd34dcd7093c1b93bed3e08b036c&q=40.9829376%2021.0010112&format=json'
+            let url = `https://us1.locationiq.com/v1/search?key=pk.0501cd34dcd7093c1b93bed3e08b036c&q=${lat}%20${long}&format=json`
             fetch(url)
                 .then((response) => response.json())
                 .then(data => {
