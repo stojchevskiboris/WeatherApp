@@ -166,7 +166,7 @@ $(document).ready(function () {
         }
 
         // https://api.worldnewsapi.com/search-news?api-key=a8bf0d174095465c8faeec59f0b4b28b&text=weather&earliest-publish-date=%272023-05-21%27
-        let URL = 'https://api.worldnewsapi.com/search-news?api-key=' + api + '&text=climate&earliest-publish-date=%27' + yesterday + '%27'
+        let URL = 'https://api.worldnewsapi.com/search-news?api-key=' + api + '&text=climate&earliest-publish-date=' + yesterday
         await fetch(URL)
             .then(async (r) => {
                 response = await r.json();
@@ -228,7 +228,7 @@ $(document).ready(function () {
         }
 
         // https://api.worldnewsapi.com/search-news?api-key=a8bf0d174095465c8faeec59f0b4b28b&text=weather&earliest-publish-date=%272023-05-21%27
-        let URL = 'https://api.worldnewsapi.com/search-news?api-key=' + api + '&text=climate&earliest-publish-date=%27' + twoDaysAgo + '%27'
+        let URL = 'https://api.worldnewsapi.com/search-news?api-key=' + api + '&text=climate&earliest-publish-date=' + twoDaysAgo
         await fetch(URL)
             .then(async (r) => {
                 response = await r.json();
