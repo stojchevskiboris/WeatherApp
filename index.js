@@ -8,7 +8,7 @@ var page = 1
 
 $(document).ready(function () {
     $("#btn").click(function () {
-        document.getElementById("footer1").scrollIntoView({block: 'end', behavior: 'auto'})
+        document.getElementById("footer1").scrollIntoView({ block: 'end', behavior: 'auto' })
     })
 
     setTimeout(() => {
@@ -68,6 +68,7 @@ $(document).ready(function () {
     })
 
     function weatherSelect(json) {
+        // console.log(json)
         document.getElementById("selectedCity").style.display = "block"
         // First Card
         document.getElementById("t1").innerText = json.location.name + ", " + json.location.country
@@ -115,7 +116,56 @@ $(document).ready(function () {
             el.classList.remove("night")
             el.classList.add("day")
         }
+        updateHourlyForecast(json);
     }
+
+    function updateHourlyForecast(json) {
+        const hourlyForecastContent = document.getElementById('hourlyForecastContent');
+        hourlyForecastContent.innerHTML = ''; // Clear existing content
+
+        // Iterate over each forecast day
+        json.forecast.forecastday.forEach(day => {
+            // Add the date header
+            const dateHeader = document.createElement('h5');
+            dateHeader.className = 'date-header mt-4 mb-2 ms-3';
+            dateHeader.innerText = new Date(day.date).toDateString();
+            hourlyForecastContent.appendChild(dateHeader);
+
+            // Add labels for the hourly data
+            const labelsDiv = document.createElement('div');
+            labelsDiv.className = 'labels d-flex justify-content-between align-items-center border-bottom pb-2 mb-2 ms-3 me-3';
+            labelsDiv.innerHTML = `
+            <span class="label-time fw-bold">Time</span>
+            <span class="label-temp fw-bold">Temperature</span>
+            <span class="label-condition fw-bold">Condition</span>
+            <span class="label-wind fw-bold">Wind</span>
+            <span class="label-precip fw-bold">Rain %</span>
+        `;
+            hourlyForecastContent.appendChild(labelsDiv);
+            // Iterate over each hour
+            day.hour.forEach(hour => {
+                const hourDiv = document.createElement('div');
+                hourDiv.className = 'hourly-item d-flex justify-content-between align-items-center border-bottom pb-2 mb-2';
+
+                hourDiv.innerHTML += `
+                    <span class="hour-time">${hour.time.slice(-5)}</span>
+                    <span class="hour-temp">${hour.temp_c}°C</span>
+                    <span class="hour-condition">
+                        <img src="${hour.condition.icon}" alt="${hour.condition.text}" width="30" height="30"/>
+                        ${hour.condition.text}
+                    </span>
+                    <span class="hour-wind">${hour.wind_kph} km/h</span>
+                    <span class="hour-precip">${hour.chance_of_rain}%</span>
+                `;
+
+                hourlyForecastContent.appendChild(hourDiv);
+            });
+        });
+
+        // Show the hourly forecast section
+        document.getElementById('hourlyForecast').style.display = 'block';
+    }
+
 
     let input = document.getElementById("cityInput");
     input.addEventListener("keypress", function (event) {
@@ -166,7 +216,7 @@ $(document).ready(function () {
         }
 
         // https://api.worldnewsapi.com/search-news?api-key=a8bf0d174095465c8faeec59f0b4b28b&text=weather&earliest-publish-date=%272023-05-21%27
-        let URL = 'https://api.worldnewsapi.com/search-news?api-key=' + api + '&text=climate&earliest-publish-date=%27' + yesterday + '%27'
+        let URL = 'https://api.worldnewsapi.com/search-news?api-key=' + api + '&text=climate&earliest-publish-date=' + yesterday;
         await fetch(URL)
             .then(async (r) => {
                 response = await r.json();
@@ -228,7 +278,7 @@ $(document).ready(function () {
         }
 
         // https://api.worldnewsapi.com/search-news?api-key=a8bf0d174095465c8faeec59f0b4b28b&text=weather&earliest-publish-date=%272023-05-21%27
-        let URL = 'https://api.worldnewsapi.com/search-news?api-key=' + api + '&text=climate&earliest-publish-date=%27' + twoDaysAgo + '%27'
+        let URL = 'https://api.worldnewsapi.com/search-news?api-key=' + api + '&text=climate&earliest-publish-date=' + twoDaysAgo;
         await fetch(URL)
             .then(async (r) => {
                 response = await r.json();
@@ -354,16 +404,18 @@ $(document).ready(function () {
 
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition((position) => {
-                    lat = position.coords.latitude
-                    long = position.coords.longitude
-                    // lat = "40.9896026"
-                    // long = "20.9152144"
-                },
+                lat = position.coords.latitude
+                long = position.coords.longitude
+                // lat = "40.9896026"
+                // long = "20.9152144"
+            },
                 (err) => {
                     alert("Please allow location access")
+                    document.getElementById("cityInput").value = ''
                 })
         } else {
-            alert("Geolocation is not supported by your browser")
+            alert("Geolocation is not supported by your browser");
+            document.getElementById("cityInput").value = ''
         }
 
         setTimeout(() => {
@@ -381,17 +433,17 @@ $(document).ready(function () {
                         document.getElementById("cityInput").classList.remove("gray")
                         // var loc = data[0].display_name
                         var loc = data.features[0].properties.city + " " + data.features[0].properties.country
-                        if (data.features[0].properties.country == 'North Macedonia'){
+                        if (data.features[0].properties.country == 'North Macedonia') {
                             var fix = ''
-                            for (var i = 0;i<loc.length;i++){
-                                if (i+1<loc.length){
-                                    if ((loc[i]=='s' || loc[i] == 'S') && loc[i+1]=='h'){
-                                        fix = loc.slice(0,i+1) + loc.slice(i+2, loc.length)
+                            for (var i = 0; i < loc.length; i++) {
+                                if (i + 1 < loc.length) {
+                                    if ((loc[i] == 's' || loc[i] == 'S') && loc[i + 1] == 'h') {
+                                        fix = loc.slice(0, i + 1) + loc.slice(i + 2, loc.length)
                                     }
                                 }
                             }
-                            if (fix!='')
-                                loc=fix
+                            if (fix != '')
+                                loc = fix
                         }
 
                         document.getElementById("cityInput").value = loc
@@ -402,7 +454,10 @@ $(document).ready(function () {
                     }, 200)
                 })
         }, 200)
-
+        setTimeout(() => {
+            if (document.getElementById("cityInput").value == 'Searching...')
+                document.getElementById("loc").click()
+        }, 2000)
     }
 
 
