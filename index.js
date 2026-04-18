@@ -1,517 +1,356 @@
-let headers = new Headers();
-headers.append('Content-Type', 'application/json');
-headers.append('Accept', 'application/json');
-headers.append('Access-Control-Allow-Origin', '*');
-var flag = 0;
-var page = 1
+/* ===== CONFIG ===== */
+const MS_PER_DAY   = 86400000; /* milliseconds in one day */
+const WEATHER_KEY  = '19a1d968ac214ba2b3d195557233001';
+const GEO_KEY      = 'e2647227b3c44fceadfd964d38860d95';
+const NEWS_KEYS    = [
+    'a09f777fe4dd48d897110afa7c6718cb',
+    '9c6af65eb2604cf3adb6d23c77fdbe4e',
+    'e76922ff429b47e08f0fec14509aed2f',
+    '6d9a728b40ea4600a9374e384982abca',
+    'a8bf0d174095465c8faeec59f0b4b28b',
+    '97e48b2242ca46ceb343b4a6b2bdfb4e',
+    '9ddfce1d20154283aaa212515a834567',
+    'c4e8337a85db4dbe836a6d607ed73399',
+    '1aa9a32e450144ad930fd83c0adee49b',
+    '3886527bc8154d1db03f6aabd63c4bdb'
+];
 
+/* ===== UTILITIES ===== */
+function $(id) { return document.getElementById(id); }
 
-$(document).ready(function () {
-    $("#btn").click(function () {
-        document.getElementById("footer1").scrollIntoView({ block: 'end', behavior: 'auto' })
-    })
+function showError(id, ms) {
+    var el = document.getElementById(id);
+    el.classList.remove('hidden');
+    clearTimeout(el._hideTimer);
+    el._hideTimer = setTimeout(function () { el.classList.add('hidden'); }, ms || 6000);
+}
 
-    setTimeout(() => {
-        document.getElementById("loc").click()
-    }, 2000)
+function hideError(id) {
+    document.getElementById(id).classList.add('hidden');
+}
 
+function randomNewsKey() {
+    return NEWS_KEYS[Math.floor(Math.random() * NEWS_KEYS.length)];
+}
 
-    $("#add").click(async function myfunc() {
-        document.getElementById("cityInput").blur()
-        var er2 = document.getElementById("error2")
-        let city = $("#cityInput").val()
-        if (city == "") {
-            er2.classList.remove("displayNone")
-            er2.classList.add("displayBlock")
-            return
-        }
-        er2.classList.remove("displayBlock")
-        er2.classList.add("displayNone")
+/* ===== WEATHER ===== */
+async function fetchWeather(query) {
+    var url = 'https://api.weatherapi.com/v1/forecast.json?key=' + WEATHER_KEY
+            + '&q=' + encodeURIComponent(query)
+            + '&days=3&aqi=yes&alerts=no';
+    var res = await fetch(url);
+    return res.json();
+}
 
-        if (flag == 1) {
-            city = "Resen, Macedonia"
-            flag = 0
-        }
+function displayWeather(data) {
+    var loc      = data.location;
+    var cur      = data.current;
+    var forecast = data.forecast.forecastday;
+    var aq       = cur.air_quality;
 
-        // https://api.weatherapi.com/v1/forecast.json?key=19a1d968ac214ba2b3d195557233001&q=%27resen%20mkd%27&days=9&aqi=yes&alerts=no
-        let url = 'https://api.weatherapi.com/v1/forecast.json?key=19a1d968ac214ba2b3d195557233001&q=' + city + '&days=9&aqi=yes&alerts=no'
-        let request = new Request(url, {
-            method: 'GET',
-            headers: headers
+    /* Main card */
+    $('cityName').textContent      = loc.name + ', ' + loc.country;
+    $('localTime').textContent     = loc.localtime.slice(-5);
+    $('tempDisplay').textContent   = cur.temp_c + '\u00b0';
+    $('weatherIcon').src           = cur.condition.icon;
+    $('weatherCondition').textContent = cur.condition.text;
+
+    var body = $('mainCardBody');
+    body.className = 'main-card-body ' + (cur.is_day ? 'is-day' : 'is-night');
+
+    /* Details card */
+    $('cityNameDetails').textContent = loc.name + ', ' + loc.country;
+    $('feelsLike').textContent        = cur.feelslike_c + '\u00b0';
+    $('highLow').textContent          = forecast[0].day.maxtemp_c + '\u00b0 / ' + forecast[0].day.mintemp_c + '\u00b0';
+    $('humidity').textContent         = cur.humidity + '%';
+    $('pressure').textContent         = cur.pressure_mb + ' mb';
+    $('visibility').textContent       = cur.vis_km + ' km';
+    $('wind').textContent             = cur.wind_kph + ' km/h';
+    $('uvIndex').textContent          = cur.uv + ' / 10';
+    $('clouds').textContent           = cur.cloud + '%';
+    $('precipitation').textContent    = cur.precip_mm + ' mm/h';
+
+    /* Air quality */
+    $('aqCO').textContent    = aq.co.toFixed(2)    + ' \u03bcg/m\u00b3';
+    $('aqNO2').textContent   = aq.no2.toFixed(2)   + ' \u03bcg/m\u00b3';
+    $('aqO3').textContent    = aq.o3.toFixed(2)    + ' \u03bcg/m\u00b3';
+    $('aqSO2').textContent   = aq.so2.toFixed(2)   + ' \u03bcg/m\u00b3';
+    $('aqPM25').textContent  = aq.pm2_5.toFixed(2) + ' \u03bcg/m\u00b3';
+    $('aqPM10').textContent  = aq.pm10.toFixed(2)  + ' \u03bcg/m\u00b3';
+    $('aqEPA').textContent   = aq['us-epa-index'];
+    $('aqDefra').textContent = aq['gb-defra-index'];
+
+    /* Forecast */
+    renderForecast(forecast);
+
+    /* Show sections */
+    $('weatherSection').classList.remove('hidden');
+    $('forecastSection').classList.remove('hidden');
+    /* Reset air quality panel on new search */
+    $('airQualityPanel').classList.add('hidden');
+}
+
+function renderForecast(forecastDays) {
+    var container = $('forecastContent');
+    container.innerHTML = '';
+
+    forecastDays.forEach(function (day) {
+        var dateStr = new Date(day.date + 'T00:00:00').toDateString();
+
+        var header = document.createElement('div');
+        header.className = 'forecast-day-header';
+        header.innerHTML =
+            '<span class="forecast-date">' + dateStr + '</span>' +
+            '<div class="forecast-labels">' +
+                '<span>Time</span>' +
+                '<span>Temp</span>' +
+                '<span>Condition</span>' +
+                '<span>Wind</span>' +
+                '<span>Rain %</span>' +
+            '</div>';
+        container.appendChild(header);
+
+        day.hour.forEach(function (hour) {
+            var row = document.createElement('div');
+            row.className = 'forecast-row';
+            row.innerHTML =
+                '<span class="fc-time">'  + hour.time.slice(-5) + '</span>' +
+                '<span class="fc-temp">'  + hour.temp_c + '\u00b0C</span>' +
+                '<span class="fc-cond">'  +
+                    '<img src="' + hour.condition.icon + '" alt="" width="28" height="28">' +
+                    '<span>' + hour.condition.text + '</span>' +
+                '</span>' +
+                '<span class="fc-wind">'  + hour.wind_kph + ' km/h</span>' +
+                '<span class="fc-rain">'  + hour.chance_of_rain + '%</span>';
+            container.appendChild(row);
         });
-        let result = await fetch(request);
-        let response = await result.json();
-
-
-        // let forecast = response;
-
-        setTimeout(() => {
-            if (response.hasOwnProperty("error")) {
-                var elm = document.getElementById("error")
-                elm.classList.remove("displayNone")
-                elm.classList.add("displayBlock")
-                setTimeout(() => {
-                    elm.classList.remove("displayBlock")
-                    elm.classList.add("displayNone")
-                }, 20000)
-                return
-            } else {
-                var elm = document.getElementById("error")
-                elm.classList.remove("displayBlock")
-                elm.classList.add("displayNone")
-                weatherSelect(response)
-            }
-
-        }, 200)
-
-
-    })
-
-    function weatherSelect(json) {
-        // console.log(json)
-        document.getElementById("selectedCity").style.display = "block"
-        // First Card
-        document.getElementById("t1").innerText = json.location.name + ", " + json.location.country
-        document.getElementById("t2").innerText = json.location.localtime.slice(-5)
-        document.getElementById("t3").innerText = json.current.temp_c + "°"
-        document.getElementById("c4img").src = json.current.condition.icon
-        document.getElementById("t4").innerText = json.current.condition.text
-
-        // Second Card
-        document.getElementById("t5").innerText = json.location.name + ", " + json.location.country
-        document.getElementById("t6").innerText = json.current.feelslike_c + "°"
-        document.getElementById("t7").innerText = json.forecast.forecastday[0].day.maxtemp_c + "° / " + json.forecast.forecastday[0].day.mintemp_c + "°"
-        document.getElementById("t8").innerText = json.current.humidity + "%"
-        document.getElementById("t9").innerText = json.current.pressure_mb + " mb"
-        document.getElementById("t10").innerText = json.current.vis_km + " km"
-        document.getElementById("t11").innerText = json.current.wind_kph + " km/h"
-        document.getElementById("t12").innerText = json.current.uv + " of 10"
-        document.getElementById("t13").innerText = json.current.cloud + "%"
-        document.getElementById("t14").innerText = json.current.precip_mm + " mm/h"
-
-        // Air Quality
-        document.getElementById("t15").innerText = json.current.air_quality.co.toFixed(2) + " μg/m³"
-        document.getElementById("t16").innerText = json.current.air_quality.no2.toFixed(2) + " μg/m³"
-        document.getElementById("t17").innerText = json.current.air_quality.o3.toFixed(2) + " μg/m³"
-        document.getElementById("t18").innerText = json.current.air_quality.so2.toFixed(2) + " μg/m³"
-        document.getElementById("t19").innerText = json.current.air_quality.pm2_5.toFixed(2) + " μg/m³"
-        document.getElementById("t20").innerText = json.current.air_quality.pm10.toFixed(2) + " μg/m³"
-        document.getElementById("t21").innerText = json.current.air_quality["us-epa-index"]
-        document.getElementById("t22").innerText = json.current.air_quality["gb-defra-index"]
-
-        document.getElementById("airButton").onclick = function () {
-            var display = document.getElementById("airQ").style.display
-            if (display == 'flex')
-                document.getElementById("airQ").style.display = "none"
-            else
-                document.getElementById("airQ").style.display = "flex"
-        }
-
-        var el = document.getElementById("cb1")
-        var is_day = json.current.is_day
-        if (is_day == 0) {
-            el.classList.remove("day")
-            el.classList.add("night")
-        } else {
-            el.classList.remove("night")
-            el.classList.add("day")
-        }
-        updateHourlyForecast(json);
-    }
-
-    function updateHourlyForecast(json) {
-        const hourlyForecastContent = document.getElementById('hourlyForecastContent');
-        hourlyForecastContent.innerHTML = ''; // Clear existing content
-
-        // Iterate over each forecast day
-        json.forecast.forecastday.forEach(day => {
-            // Add the date header
-            const dateHeader = document.createElement('h5');
-            dateHeader.className = 'date-header mt-4 mb-2 ms-3';
-            dateHeader.innerText = new Date(day.date).toDateString();
-            hourlyForecastContent.appendChild(dateHeader);
-
-            // Add labels for the hourly data
-            const labelsDiv = document.createElement('div');
-            labelsDiv.className = 'labels d-flex justify-content-between align-items-center border-bottom pb-2 mb-2 ms-3 me-3';
-            labelsDiv.innerHTML = `
-            <span class="label-time fw-bold">Time</span>
-            <span class="label-temp fw-bold">Temperature</span>
-            <span class="label-condition fw-bold">Condition</span>
-            <span class="label-wind fw-bold">Wind</span>
-            <span class="label-precip fw-bold">Rain %</span>
-        `;
-            hourlyForecastContent.appendChild(labelsDiv);
-            // Iterate over each hour
-            day.hour.forEach(hour => {
-                const hourDiv = document.createElement('div');
-                hourDiv.className = 'hourly-item d-flex justify-content-between align-items-center border-bottom pb-2 mb-2';
-
-                hourDiv.innerHTML += `
-                    <span class="hour-time">${hour.time.slice(-5)}</span>
-                    <span class="hour-temp">${hour.temp_c}°C</span>
-                    <span class="hour-condition">
-                        <img src="${hour.condition.icon}" alt="${hour.condition.text}" width="30" height="30"/>
-                        ${hour.condition.text}
-                    </span>
-                    <span class="hour-wind">${hour.wind_kph} km/h</span>
-                    <span class="hour-precip">${hour.chance_of_rain}%</span>
-                `;
-
-                hourlyForecastContent.appendChild(hourDiv);
-            });
-        });
-
-        // Show the hourly forecast section
-        document.getElementById('hourlyForecast').style.display = 'block';
-    }
-
-
-    let input = document.getElementById("cityInput");
-    input.addEventListener("keypress", function (event) {
-        if (event.key === "Enter") {
-            event.preventDefault();
-            document.getElementById("cityInput").blur()
-            document.getElementById("add").click();
-        }
     });
+}
 
+/* ===== GEOLOCATION ===== */
+function useMyLocation(silent) {
+    var input = $('cityInput');
 
-    const news2 = async () => {
-        let response;
-        let yesterday = new Date(Date.now() - 90000000).toLocaleString('sv').slice(0, 10)
-        const api0 = 'a09f777fe4dd48d897110afa7c6718cb';
-        const api1 = '9c6af65eb2604cf3adb6d23c77fdbe4e';
-        const api2 = 'e76922ff429b47e08f0fec14509aed2f';
-        const api3 = '6d9a728b40ea4600a9374e384982abca';
-        const api4 = 'a8bf0d174095465c8faeec59f0b4b28b';
-        const api5 = '97e48b2242ca46ceb343b4a6b2bdfb4e';
-        const api6 = '9ddfce1d20154283aaa212515a834567';
-        const api7 = 'c4e8337a85db4dbe836a6d607ed73399';
-        const api8 = '1aa9a32e450144ad930fd83c0adee49b';
-        const api9 = '3886527bc8154d1db03f6aabd63c4bdb';
-        var api = "";
-        var num = Math.random().toString().slice(-1)
-
-        if (num == "0") {
-            api = api0
-        } else if (num == "1") {
-            api = api1
-        } else if (num == "2") {
-            api = api2
-        } else if (num == "3") {
-            api = api3
-        } else if (num == "4") {
-            api = api4
-        } else if (num == "5") {
-            api = api5
-        } else if (num == "6") {
-            api = api6
-        } else if (num == "7") {
-            api = api7
-        } else if (num == "8") {
-            api = api8
-        } else {
-            api = api9
-        }
-
-        // https://api.worldnewsapi.com/search-news?api-key=a8bf0d174095465c8faeec59f0b4b28b&text=weather&earliest-publish-date=%272023-05-21%27
-        let URL = 'https://api.worldnewsapi.com/search-news?api-key=' + api + '&text=climate&earliest-publish-date=' + yesterday;
-        await fetch(URL)
-            .then(async (r) => {
-                response = await r.json();
-            })
-
-        let newsArr = response.news;
-        let text = ""
-        for (let x in newsArr) {
-            var description = newsArr[x].text.slice(0, 400) + '... ' + "<a href = " + newsArr[x].url + " target=”_blank”>Continue reading</a>"
-            var newsDate = newsArr[x].publish_date.slice(0, 10)
-            text +=
-                "<div class='card'>" +
-                "<a href='" + newsArr[x].url + "' target=”_blank”> <img class='card-img-top card-img-custom' src='" + newsArr[x].image + "' alt='Image not available'></a>" +
-                "<div class='card-body'>" +
-                "<a href='" + newsArr[x].url + "' target=”_blank”><h5 class='card-title'>" + newsArr[x].title + "</h5></a>" +
-                "<p class='card-text'>" + description + "</p>" +
-                "<p class='card-text'><small class='text-muted'>" + '1 day ago, ' + newsDate.slice(8, 10) + "." + newsDate.slice(5, 7) + "." + newsDate.slice(0, 4) + "</small></p>" +
-                "</div></div><br>"
-        }
-        document.getElementById("newsDiv").innerHTML = text
+    if (!navigator.geolocation) {
+        if (!silent) alert('Geolocation is not supported by your browser.');
+        return;
     }
 
-    const news2_2 = async () => {
-        let response;
-        let twoDaysAgo = new Date(Date.now() - 180000000).toLocaleString('sv').slice(0, 10)
-        const api0 = 'a09f777fe4dd48d897110afa7c6718cb';
-        const api1 = '9c6af65eb2604cf3adb6d23c77fdbe4e';
-        const api2 = 'e76922ff429b47e08f0fec14509aed2f';
-        const api3 = '6d9a728b40ea4600a9374e384982abca';
-        const api4 = 'a8bf0d174095465c8faeec59f0b4b28b';
-        const api5 = '97e48b2242ca46ceb343b4a6b2bdfb4e';
-        const api6 = '9ddfce1d20154283aaa212515a834567';
-        const api7 = 'c4e8337a85db4dbe836a6d607ed73399';
-        const api8 = '1aa9a32e450144ad930fd83c0adee49b';
-        const api9 = '3886527bc8154d1db03f6aabd63c4bdb';
-        var api = "";
-        var num = Math.random().toString().slice(-1)
+    input.value = 'Locating\u2026';
+    input.readOnly = true;
+    input.classList.add('input-loading');
 
-        if (num == "0") {
-            api = api0
-        } else if (num == "1") {
-            api = api1
-        } else if (num == "2") {
-            api = api2
-        } else if (num == "3") {
-            api = api3
-        } else if (num == "4") {
-            api = api4
-        } else if (num == "5") {
-            api = api5
-        } else if (num == "6") {
-            api = api6
-        } else if (num == "7") {
-            api = api7
-        } else if (num == "8") {
-            api = api8
-        } else {
-            api = api9
-        }
-
-        // https://api.worldnewsapi.com/search-news?api-key=a8bf0d174095465c8faeec59f0b4b28b&text=weather&earliest-publish-date=%272023-05-21%27
-        let URL = 'https://api.worldnewsapi.com/search-news?api-key=' + api + '&text=climate&earliest-publish-date=' + twoDaysAgo;
-        await fetch(URL)
-            .then(async (r) => {
-                response = await r.json();
-            })
-
-        let newsArr = response.news;
-        let text = ""
-        for (let x in newsArr) {
-            var description = newsArr[x].text.slice(0, 400) + '... ' + "<a href = " + newsArr[x].url + " target=”_blank”>Continue reading</a>"
-            var newsDate = newsArr[x].publish_date.slice(0, 10)
-            text +=
-                "<div class='card'>" +
-                "<a href='" + newsArr[x].url + "' target=”_blank”> <img class='card-img-top card-img-custom' src='" + newsArr[x].image + "' alt='Image not available'></a>" +
-                "<div class='card-body'>" +
-                "<a href='" + newsArr[x].url + "' target=”_blank”><h5 class='card-title'>" + newsArr[x].title + "</h5></a>" +
-                "<p class='card-text'>" + description + "</p>" +
-                "<p class='card-text'><small class='text-muted'>" + '2 day ago, ' + newsDate.slice(8, 10) + "." + newsDate.slice(5, 7) + "." + newsDate.slice(0, 4) + "</small></p>" +
-                "</div></div><br>"
-        }
-        document.getElementById("newsDiv2").innerHTML = text
-    }
-
-    document.getElementById("p2").onclick = function p2Click() {
-        page = 2
-        document.getElementById("newsDiv").classList.add("displayNone")
-        document.getElementById("newsDiv").classList.remove("displayBlock")
-
-        document.getElementById("newsDiv2").classList.add("displayBlock")
-        document.getElementById("newsDiv2").classList.remove("displayNone")
-
-        document.getElementById("p1li").classList.remove("active")
-        document.getElementById("p2li").classList.add("active")
-    }
-
-    document.getElementById("p1").onclick = function p1Click() {
-        page = 1
-        document.getElementById("newsDiv").classList.remove("displayNone")
-        document.getElementById("newsDiv").classList.add("displayBlock")
-
-        document.getElementById("newsDiv2").classList.remove("displayBlock")
-        document.getElementById("newsDiv2").classList.add("displayNone")
-
-        document.getElementById("p2li").classList.remove("active")
-        document.getElementById("p1li").classList.add("active")
-    }
-
-    document.getElementById("prev").onclick = function () {
-        if (page == 2) {
-            page = 1
-            document.getElementById("newsDiv").classList.remove("displayNone")
-            document.getElementById("newsDiv").classList.add("displayBlock")
-            document.getElementById("newsDiv2").classList.remove("displayBlock")
-            document.getElementById("newsDiv2").classList.add("displayNone")
-            document.getElementById("p2li").classList.remove("active")
-            document.getElementById("p1li").classList.add("active")
-        }
-        return
-    }
-    document.getElementById("next").onclick = function () {
-        if (page == 1) {
-            page = 2
-            document.getElementById("newsDiv").classList.add("displayNone")
-            document.getElementById("newsDiv").classList.remove("displayBlock")
-            document.getElementById("newsDiv2").classList.add("displayBlock")
-            document.getElementById("newsDiv2").classList.remove("displayNone")
-            document.getElementById("p1li").classList.remove("active")
-            document.getElementById("p2li").classList.add("active")
-        }
-        return
-    }
-
-
-    news2();
-    news2_2();
-
-
-    var loc = "https://ipapi.co/"
-    let t1 = ''
-    let t2 = ''
-    let locJson
-    fetch('https://api.ipify.org/?format=json')
-        .then((res) => res.json())
-        .then((data) => {
-            t1 = data.ip.toString()
-        })
-
-
-    // https://ipapi.co/95.180.230.111/json/
-
-    var btn2 = document.getElementById("add")
-
-
-    document.getElementById("loc").onclick = function () {
-        document.getElementById("cityInput").readOnly = true
-        document.getElementById("cityInput").classList.add("gray")
-        document.getElementById("cityInput").value = "Searching..."
-
-        // setTimeout(() => {
-        //     t2 = loc + t1 + "/json"
-        //     console.log(t2)
-        //     fetch(t2)
-        //         .then((response) => response.json())
-        //         .then((data) => {
-        //             setTimeout(() => {
-        //                 //console.log(locJson)
-        //                 var inp = data.city + ", " + data.country
-        //                 document.getElementById("cityInput").readOnly = false
-        //                 if (inp == "undefined, undefined")
-        //                     return
-        //                 document.getElementById("cityInput").classList.remove("gray")
-        //                 document.getElementById("cityInput").value = inp
-        //                 setTimeout(() => {
-        //                     btn2.click()
-        //                     document.getElementById("cityInput").blur()
-        //                 }, 500)
-        //             }, 200)
-        //         })
-        //
-        // }, 700)
-        var lat = ""
-        var long = ""
-        const http = new XMLHttpRequest();
-
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition((position) => {
-                lat = position.coords.latitude
-                long = position.coords.longitude
-                // lat = "40.9896026"
-                // long = "20.9152144"
-            },
-                (err) => {
-                    alert("Please allow location access")
-                    document.getElementById("cityInput").value = ''
-                })
-        } else {
-            alert("Geolocation is not supported by your browser");
-            document.getElementById("cityInput").value = ''
-        }
-
-        setTimeout(() => {
-            // let url = `https://geocode.maps.co/search?q=${lat}%20${long}`
-            let url = `https://api.geoapify.com/v1/geocode/reverse?lat=${lat}&lon=${long}&apiKey=e2647227b3c44fceadfd964d38860d95`
+    navigator.geolocation.getCurrentPosition(
+        function (position) {
+            var lat = position.coords.latitude;
+            var lon = position.coords.longitude;
+            var url = 'https://api.geoapify.com/v1/geocode/reverse?lat=' + lat
+                    + '&lon=' + lon + '&apiKey=' + GEO_KEY;
             fetch(url)
-                .then((response) => response.json())
-                .then(data => {
-                    // console.log(lat)
-                    // console.log(long)
-                    // console.log(data.features[0].properties.city)
-                    // console.log(data.features[0].properties.country)
-                    setTimeout(() => {
-                        document.getElementById("cityInput").readOnly = false
-                        document.getElementById("cityInput").classList.remove("gray")
-                        // var loc = data[0].display_name
-                        var loc = data.features[0].properties.city + " " + data.features[0].properties.country
-                        if (data.features[0].properties.country == 'North Macedonia') {
-                            var fix = ''
-                            for (var i = 0; i < loc.length; i++) {
-                                if (i + 1 < loc.length) {
-                                    if ((loc[i] == 's' || loc[i] == 'S') && loc[i + 1] == 'h') {
-                                        fix = loc.slice(0, i + 1) + loc.slice(i + 2, loc.length)
-                                    }
-                                }
-                            }
-                            if (fix != '')
-                                loc = fix
+                .then(function (r) { return r.json(); })
+                .then(function (data) {
+                    input.readOnly = false;
+                    input.classList.remove('input-loading');
+
+                    var props  = data && data.features && data.features[0] && data.features[0].properties;
+                    var city   = props && (props.city || props.town || props.village || props.county || props.state);
+                    var country = props && props.country;
+
+                    if (!city || !country) {
+                        /* Fall back to raw coordinates so the weather API can still resolve */
+                        input.value = lat.toFixed(4) + ',' + lon.toFixed(4);
+                    } else {
+                        var loc = city + ', ' + country;
+                        /* Fix North Macedonia transliteration: Sh -> S */
+                        if (country === 'North Macedonia') {
+                            loc = loc.replace(/Sh/g, 'S').replace(/sh/g, 's');
                         }
+                        input.value = loc;
+                    }
 
-                        document.getElementById("cityInput").value = loc
-                        setTimeout(() => {
-                            btn2.click()
-                            document.getElementById("cityInput").blur()
-                        }, 200)
-                    }, 200)
+                    $('searchBtn').click();
                 })
-        }, 200)
-        setTimeout(() => {
-            if (document.getElementById("cityInput").value == 'Searching...')
-                document.getElementById("loc").click()
-        }, 2000)
-    }
-
-
-})
-
-function removeDuplicates(arr) {
-    return arr.filter((a, b) => arr.indexOf(a) === b);
+                .catch(function (err) {
+                    console.error('Reverse geocoding error:', err);
+                    input.value = '';
+                    input.readOnly = false;
+                    input.classList.remove('input-loading');
+                });
+        },
+        function (err) {
+            input.value = '';
+            input.readOnly = false;
+            input.classList.remove('input-loading');
+            /* Only show an alert if the user explicitly clicked the button (not the silent auto-attempt) */
+            if (!silent && err.code !== 1 /* PERMISSION_DENIED */) {
+                alert('Could not retrieve your location. Please try again.');
+            }
+        },
+        { timeout: 10000, maximumAge: 60000 }
+    );
 }
 
-async function inAuto() {
-    let cities = [];
-    let q = $("#cityInput").val()
-    if (q == "") return;
-    let url = 'https://api.weatherapi.com/v1/search.json?key=19a1d968ac214ba2b3d195557233001&q=' + q
-    let request = new Request(url, {
-        method: 'GET',
-        headers: headers
+/* ===== AUTOCOMPLETE ===== */
+var acTimer = null;
+
+function handleAutocomplete() {
+    clearTimeout(acTimer);
+    var q = $('cityInput').value.trim();
+    if (!q) return;
+
+    acTimer = setTimeout(function () {
+        var url = 'https://api.weatherapi.com/v1/search.json?key=' + WEATHER_KEY
+                + '&q=' + encodeURIComponent(q);
+        fetch(url)
+            .then(function (r) { return r.json(); })
+            .then(function (data) {
+                if (!Array.isArray(data)) return;
+                var cities = data.map(function (r) { return r.name + ', ' + r.country; });
+                /* Remove duplicates */
+                cities = cities.filter(function (v, i, a) { return a.indexOf(v) === i; });
+
+                jQuery('#cityInput').autocomplete({
+                    source: cities,
+                    minLength: 1,
+                    select: function (event, ui) {
+                        setTimeout(function () {
+                            $('searchBtn').click();
+                            $('cityInput').blur();
+                        }, 100);
+                    }
+                });
+            })
+            .catch(function (err) { console.error('Autocomplete error:', err); });
+    }, 280);
+}
+
+/* ===== NEWS ===== */
+async function fetchNews(daysAgo) {
+    var key  = randomNewsKey();
+    var date = new Date(Date.now() - daysAgo * MS_PER_DAY).toLocaleString('sv').slice(0, 10);
+    var url  = 'https://api.worldnewsapi.com/search-news?api-key=' + key
+             + '&text=climate&earliest-publish-date=' + date;
+    var res  = await fetch(url);
+    return res.json();
+}
+
+function renderNews(articles, container) {
+    if (!articles || articles.length === 0) {
+        container.innerHTML = '<p class="no-news">No news available at the moment.</p>';
+        return;
+    }
+    container.innerHTML = articles.map(function (a) {
+        var raw  = (a.publish_date || '').slice(0, 10);
+        var date = raw ? raw.slice(8, 10) + '.' + raw.slice(5, 7) + '.' + raw.slice(0, 4) : '';
+        var desc = a.text ? a.text.slice(0, 320) + '\u2026 ' : '';
+        var img  = a.image
+            ? '<a href="' + a.url + '" target="_blank" rel="noopener">'
+              + '<img class="news-img" src="' + a.image + '" alt="News image" loading="lazy"></a>'
+            : '';
+        return '<div class="news-card">'
+            + img
+            + '<div class="news-body">'
+            + '<h3 class="news-title"><a href="' + a.url + '" target="_blank" rel="noopener">'
+            + (a.title || '') + '</a></h3>'
+            + '<p class="news-desc">' + desc
+            + '<a href="' + a.url + '" target="_blank" rel="noopener">Continue reading</a></p>'
+            + (date ? '<small class="news-date">' + date + '</small>' : '')
+            + '</div></div>';
+    }).join('');
+}
+
+/* ===== PAGINATION ===== */
+var currentPage = 1;
+
+function setNewsPage(page) {
+    currentPage = page;
+    var c1 = $('newsContainer');
+    var c2 = $('newsContainer2');
+    var b1 = $('page1Btn');
+    var b2 = $('page2Btn');
+
+    if (page === 1) {
+        c1.classList.remove('hidden');
+        c2.classList.add('hidden');
+        b1.classList.add('active');
+        b2.classList.remove('active');
+    } else {
+        c1.classList.add('hidden');
+        c2.classList.remove('hidden');
+        b1.classList.remove('active');
+        b2.classList.add('active');
+    }
+}
+
+/* ===== INIT ===== */
+jQuery(document).ready(function () {
+    var cityInput = $('cityInput');
+    var searchBtn = $('searchBtn');
+
+    /* Search button */
+    searchBtn.addEventListener('click', async function () {
+        cityInput.blur();
+        var city = cityInput.value.trim();
+
+        if (!city) {
+            showError('errorEmpty');
+            return;
+        }
+        hideError('errorEmpty');
+
+        try {
+            var data = await fetchWeather(city);
+            if (data.error) {
+                showError('errorMsg');
+                return;
+            }
+            hideError('errorMsg');
+            displayWeather(data);
+        } catch (err) {
+            console.error('Weather fetch error:', err);
+            showError('errorMsg');
+        }
     });
-    let result = await fetch(request);
-    let response = await result.json();
-    let j = response.length;
-    if (q.toLowerCase() == "r" || q.toLowerCase() == "re" || q.toLowerCase() == "res" || q.toLowerCase() == "rese" || q.toLowerCase() == "resen")
-        cities.push("Resen, Macedonia")
-    for (i = 0; i < j; i++) {
-        cities.push(response[i].name + ", " + response[i].country)
-    }
-    cities = removeDuplicates(cities);
 
-
-    for (var x in cities) {
-        if (cities[x] == "Resen, Macedonia") {
-            var tmp = cities[0]
-            cities[0] = 'Resen, Macedonia'
-            cities[x] = tmp
+    /* Enter key */
+    cityInput.addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            searchBtn.click();
         }
-    }
+    });
 
-    if (cities[0] == "Resen, Macedonia")
-        flag = 1;
-    else flag = 0;
-    var btn1 = document.getElementById("add")
-    $("#cityInput").autocomplete({
-        source: cities,
-        select: function (event, ui) { //ui.item.label
-            if (ui.item.label != "Resen, Macedonia")
-                flag = 0
-            document.getElementById("cityInput").innerText = ui.item.label
-            setTimeout(() => {
-                btn1.click()
-                document.getElementById("cityInput").blur()
-            }, 100)
+    /* Autocomplete */
+    cityInput.addEventListener('input', handleAutocomplete);
 
-        }
+    /* Location button */
+    $('locBtn').addEventListener('click', function () {
+        useMyLocation(false);
+    });
 
-    })
+    /* Air quality toggle */
+    $('airQualityBtn').addEventListener('click', function () {
+        $('airQualityPanel').classList.toggle('hidden');
+    });
 
-}
+    /* Pagination */
+    $('page1Btn').addEventListener('click', function () { setNewsPage(1); });
+    $('page2Btn').addEventListener('click', function () { setNewsPage(2); });
+    $('prevPage').addEventListener('click', function () { if (currentPage > 1) setNewsPage(currentPage - 1); });
+    $('nextPage').addEventListener('click', function () { if (currentPage < 2) setNewsPage(currentPage + 1); });
+
+    /* Load news */
+    var c1 = $('newsContainer');
+    var c2 = $('newsContainer2');
+
+    fetchNews(1)
+        .then(function (d) { renderNews(d.news, c1); })
+        .catch(function () { c1.innerHTML = '<p class="no-news">Could not load news.</p>'; });
+
+    fetchNews(2)
+        .then(function (d) { renderNews(d.news, c2); })
+        .catch(function () { c2.innerHTML = '<p class="no-news">Could not load news.</p>'; });
+
+    /* Auto-detect location on load (silently — no alert if denied) */
+    useMyLocation(true);
+});
