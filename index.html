@@ -2,246 +2,194 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
-    <title>Weather</title>
-    <link rel="icon" type="image/x-icon" href="/icons/favicon.ico">
+    <title>Weather App</title>
+    <link rel="icon" type="image/x-icon" href="icons/favicon.ico">
     <link rel="stylesheet" href="jquery/jquery-ui.css">
-    <script src="jquery/jquery.js"></script>
-    <script src="jquery/jquery-ui.js"></script>
-    <link rel="stylesheet" href="Bootstrap/bootstrap.min.css"
-          integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
-    <script src="Bootstrap/bootstrap.bundle.min.js"
-            integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
-            crossorigin="anonymous"></script>
-
     <link rel="stylesheet" href="index.css">
-    <script src="index.js"></script>
-
-
 </head>
 <body>
 
-<header id="header1" class="navbar navbar-dark  mb-3 maxwidth">
-    <img src="icons/weather.png" height="100" width="100"/>
-    <p id="headerText" class="nav nav-item">Weather App</p>
-    <img src="icons/weather.png" height="100" width="100"/>
-    <!--    <a href="https://github.com/stojchevskiboris/WeatherApp" target=”_blank”> <img  height="40" width="40" id="hovergithub" title="View project source code on Github" src="icons/github.png"></a>-->
+<header class="app-header">
+    <div class="header-content">
+        <img src="icons/weather.png" alt="Weather" class="header-logo">
+        <h1 class="header-title">Weather App</h1>
+        <img src="icons/weather.png" alt="Weather" class="header-logo">
+    </div>
 </header>
-<br>
-<div id="blank">.</div>
-<div>
-    <div id="main">
-        <div id="controls" class="row">
-            <div class="col-7">
-                <input onkeyup="inAuto()"
-                       class="form-control deletable"
-                       placeholder="City, Country"
-                       type="search"
-                       id="cityInput">
+
+<main class="app-main">
+
+    <!-- Search -->
+    <section class="search-section">
+        <div class="search-row">
+            <div class="search-input-wrap">
+                <input
+                    type="search"
+                    id="cityInput"
+                    class="search-input"
+                    placeholder="Search city, country…"
+                    autocomplete="off"
+                >
             </div>
-            <div class="col-3">
-                <button class="btn btn-primary " id="add">Search</button>
-
-            </div>
-            <div class="col-2">
-                <button class="btn btn-primary " id="loc">⠀</button>
-
-            </div>
-
-
+            <button id="searchBtn" class="btn-search" title="Search">
+                <span class="btn-search-label">Search</span>
+                <span class="btn-search-icon" aria-hidden="true">&#128269;</span>
+            </button>
+            <button id="locBtn" class="btn-loc" title="Use my location">
+                <img src="icons/loc.png" alt="Use my location" width="22" height="22">
+            </button>
         </div>
-        <p id="error" class="displayNone">No matching location found.</p>
-        <p id="error2" class="displayNone">Please enter data.</p>
+        <p id="errorMsg" class="error-msg hidden">No matching location found.</p>
+        <p id="errorEmpty" class="error-msg hidden">Please enter a city name.</p>
+    </section>
 
-        <br><br><br><br>
+    <!-- Weather -->
+    <section id="weatherSection" class="weather-section hidden">
 
-
-        <div id="selectedCity" style="display: none">
-
-            <div id="card1" class="card">
-                <div class="card-header">
-                    <h5 class="c1" id="t1">City, Country</h5>
-                    <span class="c2 ">Local time: <span id="t2"></span></span>
-                </div>
-                <div id="cb1" class="card-body cb-shadow">
-                    <h5 class="card-title c3 color2" id="t3">Temperature</h5>
-                    <img id="c4img" src="" width="100px" height="100px">
-                    <p class="card-text color2" id="t4">Weather</p>
-                </div>
+        <!-- Main card -->
+        <div class="weather-card main-card">
+            <div class="main-card-header">
+                <h2 id="cityName">—</h2>
+                <span class="local-time">Local time: <strong id="localTime">—</strong></span>
             </div>
-
-            <br>
-
-            <div class="card">
-                <div class="card-body">
-                    <h6 id="cb3" class="card-title">Weather today in <span id="t5"></span></h6>
-                    <div class="fellsLike">
-                        <span class="c4" id="t6">Temperature</span><br>
-                        <p>Feels Like</p><br>
-                    </div>
-                    <div class="row tb">
-                        <div class="col">
-                            <div class="item border-bottom pb-2 mb-2 me-2">
-                                <img src="icons/weather/high_low.png" height="30" width="30"/>
-                                <span style="font-weight: bold">High / Low</span>
-                                <span class="float-end" id="t7"></span>
-                            </div>
-
-                            <div class="item border-bottom pb-2 mb-2 me-2">
-                                <img src="icons/weather/humidity.png" height="30" width="30"/>
-                                <span style="font-weight: bold">Humidity</span>
-                                <span class="float-end" id="t8"></span>
-                            </div>
-
-                            <div class="item border-bottom pb-2 mb-2 me-2">
-                                <img src="icons/weather/pressure.png" height="30" width="30"/>
-                                <span style="font-weight: bold">Pressure</span>
-                                <span class="float-end" id="t9"></span>
-                            </div>
-
-                            <div class="item pb-2 mb-2 me-2">
-                                <img src="icons/weather/visibility.png" height="30" width="30"/>
-                                <span style="font-weight: bold">Visibility</span>
-                                <span class="float-end" id="t10"></span>
-                            </div>
-
-                        </div>
-                        <div class="col">
-                            <div class="item border-bottom pb-2 mb-2 ms-2">
-                                <img src="icons/weather/wind.png" height="30" width="30"/>
-                                <span style="font-weight: bold">Wind</span>
-                                <span class="float-end" id="t11"></span>
-                            </div>
-
-                            <div class="item border-bottom pb-2 mb-2 ms-2">
-                                <img src="icons/weather/uv_index.png" height="30" width="30"/>
-                                <span style="font-weight: bold">UV Index</span>
-                                <span class="float-end" id="t12"></span>
-                            </div>
-
-                            <div class="item border-bottom pb-2 mb-2 ms-2">
-                                <img src="icons/weather/cloud.PNG" height="30" width="30"/>
-                                <span style="font-weight: bold">Clouds</span>
-                                <span class="float-end" id="t13"></span>
-                            </div>
-
-                            <div class="item pb-2 mb-2 ms-2">
-                                <img src="icons/weather/precipation.png" height="30" width="30"/>
-                                <span style="font-weight: bold">Precipitation</span>
-                                <span class="float-end" id="t14"></span>
-                            </div>
-                        </div>
-
-                    </div>
-                    <br>
-
-                    <button id="airButton" class="btn btn-air btn-outline-primary mb-2">Air Quality</button>
-
-                    <div class="row tb" id="airQ" style="display:none">
-                        <p class="airQualityH">Air Quality</p>
-                        <div class="col">
-                            <div class="item border-bottom pb-2 mb-2 me-2">
-                                <span style="font-weight: bold">Carbon Monoxide</span>
-                                <span class="float-end" id="t15"></span>
-                            </div>
-
-                            <div class="item border-bottom pb-2 mb-2 me-2">
-                                <span style="font-weight: bold">Nitrogen dioxide</span>
-                                <span class="float-end" id="t16"></span>
-                            </div>
-
-                            <div class="item border-bottom pb-2 mb-2 me-2">
-                                <span style="font-weight: bold">Ozone</span>
-                                <span class="float-end" id="t17"></span>
-                            </div>
-
-                            <div class="item pb-2 mb-2 me-2">
-                                <span style="font-weight: bold">Sulphur dioxide</span>
-                                <span class="float-end" id="t18"></span>
-                            </div>
-
-                        </div>
-                        <div class="col">
-                            <div class="item border-bottom pb-2 mb-2 ms-2">
-                                <span style="font-weight: bold">PM2.5</span>
-                                <span class="float-end" id="t19"></span>
-                            </div>
-
-                            <div class="item border-bottom pb-2 mb-2 ms-2">
-                                <span style="font-weight: bold">PM10</span>
-                                <span class="float-end" id="t20"></span>
-                            </div>
-
-                            <div class="item border-bottom pb-2 mb-2 ms-2">
-                                <span style="font-weight: bold">US - EPA standard</span>
-                                <span class="float-end" id="t21"></span>
-                            </div>
-
-                            <div class="item pb-2 mb-2 ms-2">
-                                <span style="font-weight: bold">UK Defra Index</span>
-                                <span class="float-end" id="t22"></span>
-                            </div>
-                        </div>
-
-                    </div>
-
+            <div class="main-card-body" id="mainCardBody">
+                <div class="temp-block">
+                    <span id="tempDisplay" class="temp-value">—</span>
+                    <img id="weatherIcon" src="" alt="weather icon" class="weather-icon-main">
                 </div>
+                <p id="weatherCondition" class="weather-condition">—</p>
             </div>
-
         </div>
-        <!--<h6>Forecast coming soon</h6>-->
-        <div>
-            <h4  class="text-center border-top fdf"></h4>
 
-            <div id="hourlyForecast" style="display: none; max-height: 600px; overflow-y: auto;">
-                <h4 class="text-center mt-2">In the next three days</h4>
-                <div id="hourlyForecastContent" class="d-flex flex-column">
-                    <!-- JS inject -->
+        <!-- Details card -->
+        <div class="weather-card details-card">
+            <div class="details-header">
+                <h3>Weather today in <span id="cityNameDetails">—</span></h3>
+                <div class="feels-like-block">
+                    <span id="feelsLike" class="feels-like-temp">—</span>
+                    <small>Feels like</small>
+                </div>
+            </div>
+            <div class="details-grid">
+                <div class="detail-item">
+                    <img src="icons/weather/high_low.png" alt="" width="24" height="24">
+                    <span class="detail-label">High / Low</span>
+                    <span id="highLow" class="detail-value">—</span>
+                </div>
+                <div class="detail-item">
+                    <img src="icons/weather/humidity.png" alt="" width="24" height="24">
+                    <span class="detail-label">Humidity</span>
+                    <span id="humidity" class="detail-value">—</span>
+                </div>
+                <div class="detail-item">
+                    <img src="icons/weather/pressure.png" alt="" width="24" height="24">
+                    <span class="detail-label">Pressure</span>
+                    <span id="pressure" class="detail-value">—</span>
+                </div>
+                <div class="detail-item">
+                    <img src="icons/weather/visibility.png" alt="" width="24" height="24">
+                    <span class="detail-label">Visibility</span>
+                    <span id="visibility" class="detail-value">—</span>
+                </div>
+                <div class="detail-item">
+                    <img src="icons/weather/wind.png" alt="" width="24" height="24">
+                    <span class="detail-label">Wind</span>
+                    <span id="wind" class="detail-value">—</span>
+                </div>
+                <div class="detail-item">
+                    <img src="icons/weather/uv_index.png" alt="" width="24" height="24">
+                    <span class="detail-label">UV Index</span>
+                    <span id="uvIndex" class="detail-value">—</span>
+                </div>
+                <div class="detail-item">
+                    <img src="icons/weather/cloud.PNG" alt="" width="24" height="24">
+                    <span class="detail-label">Clouds</span>
+                    <span id="clouds" class="detail-value">—</span>
+                </div>
+                <div class="detail-item">
+                    <img src="icons/weather/precipation.png" alt="" width="24" height="24">
+                    <span class="detail-label">Precipitation</span>
+                    <span id="precipitation" class="detail-value">—</span>
+                </div>
+            </div>
+
+            <button id="airQualityBtn" class="btn-air-quality">Air Quality</button>
+
+            <div id="airQualityPanel" class="air-quality-panel hidden">
+                <h4 class="aq-title">Air Quality</h4>
+                <div class="details-grid">
+                    <div class="detail-item">
+                        <span class="detail-label">Carbon Monoxide</span>
+                        <span id="aqCO" class="detail-value">—</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Nitrogen Dioxide</span>
+                        <span id="aqNO2" class="detail-value">—</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Ozone</span>
+                        <span id="aqO3" class="detail-value">—</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Sulphur Dioxide</span>
+                        <span id="aqSO2" class="detail-value">—</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">PM2.5</span>
+                        <span id="aqPM25" class="detail-value">—</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">PM10</span>
+                        <span id="aqPM10" class="detail-value">—</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">US EPA Standard</span>
+                        <span id="aqEPA" class="detail-value">—</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">UK Defra Index</span>
+                        <span id="aqDefra" class="detail-value">—</span>
+                    </div>
                 </div>
             </div>
         </div>
 
+        <!-- 3-Day Forecast -->
+        <div id="forecastSection" class="weather-card forecast-card hidden">
+            <h3 class="forecast-title">3-Day Forecast</h3>
+            <div id="forecastContent"></div>
+        </div>
 
-    </div>
-    <br><br>
+    </section>
 
-    <h2 id="wnH">World news</h2>
-    <br>
+    <!-- News -->
+    <section class="news-section">
+        <h2 class="section-title">World News</h2>
+        <div id="newsContainer">
+            <div class="loading-state">
+                <img src="icons/loading.gif" alt="Loading" width="36" height="36">
+                <span>Loading news…</span>
+            </div>
+        </div>
+        <div id="newsContainer2" class="hidden"></div>
+        <nav class="pagination-nav" aria-label="News pages">
+            <button id="prevPage" class="page-btn" aria-label="Previous page">&#8249;</button>
+            <button id="page1Btn" class="page-btn active" aria-label="Page 1">1</button>
+            <button id="page2Btn" class="page-btn" aria-label="Page 2">2</button>
+            <button id="nextPage" class="page-btn" aria-label="Next page">&#8250;</button>
+        </nav>
+    </section>
 
-    <div id="newsDiv">
-        <img src="icons/loading.gif" height="50" width="50"/>
-        Loading news
-    </div>
+</main>
 
+<footer class="app-footer">
+    <p>&copy; <a href="https://github.com/stojchevskiboris" target="_blank" rel="noopener">Boris Stojchevski</a>, 2023</p>
+</footer>
 
-
-    <div id="newsDiv2" class="displayNone">
-
-    </div>
-
-    <nav aria-label="Page navigation">
-        <ul class="pagination justify-content-center">
-            <li class="page-item">
-                <a id="prev" class="page-link" href="#" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
-                    <span class="sr-only">Previous</span>
-                </a>
-            </li>
-            <li id="p1li" class="page-item active"><a id="p1" class="page-link" href="#">1</a></li>
-            <li id="p2li" class="page-item"><a id="p2" class="page-link" href="#">2</a></li>
-            <li class="page-item">
-                <a id="next" class="page-link" href="#" aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
-                    <span class="sr-only">Next</span>
-                </a>
-            </li>
-        </ul>
-    </nav>
-
-    <br> <br> <br> <br> <br> <br> <br>
-    <footer id="footer1">
-        <p>&copy;<a class="link-secondary" href="https://github.com/stojchevskiboris">Boris Stojchevski</a>, 2023</p>
-    </footer>
-</div>
+<script src="jquery/jquery.js"></script>
+<script src="jquery/jquery-ui.js"></script>
+<script src="index.js"></script>
 </body>
 </html>
