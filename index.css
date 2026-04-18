@@ -111,8 +111,9 @@ a:hover {
     border: 1px solid var(--card-border);
     border-radius: var(--radius);
     color: var(--text);
-    outline: none;
-    transition: border-color var(--transition), background var(--transition);
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+    transition: border-color var(--transition), background var(--transition), outline-color var(--transition);
     -webkit-appearance: none;
     appearance: none;
 }
@@ -124,6 +125,7 @@ a:hover {
 .search-input:focus {
     border-color: var(--accent);
     background: rgba(96, 165, 250, 0.08);
+    outline-color: var(--accent);
 }
 
 .search-input.input-loading {

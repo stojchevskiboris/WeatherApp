@@ -1,4 +1,5 @@
 /* ===== CONFIG ===== */
+const MS_PER_DAY   = 86400000; /* milliseconds in one day */
 const WEATHER_KEY  = '19a1d968ac214ba2b3d195557233001';
 const GEO_KEY      = 'e2647227b3c44fceadfd964d38860d95';
 const NEWS_KEYS    = [
@@ -226,7 +227,7 @@ function handleAutocomplete() {
 /* ===== NEWS ===== */
 async function fetchNews(daysAgo) {
     var key  = randomNewsKey();
-    var date = new Date(Date.now() - daysAgo * 86400000).toLocaleString('sv').slice(0, 10);
+    var date = new Date(Date.now() - daysAgo * MS_PER_DAY).toLocaleString('sv').slice(0, 10);
     var url  = 'https://api.worldnewsapi.com/search-news?api-key=' + key
              + '&text=climate&earliest-publish-date=' + date;
     var res  = await fetch(url);
